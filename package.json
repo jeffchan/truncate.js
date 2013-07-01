@@ -1,0 +1,13 @@
+{
+	"name": "truncatejs",
+	"version": "0.0.1",
+	"main": "truncate.js",
+	"scripts": {
+		"test": "`npm bin`/mocha-phantomjs test/truncate-test.html"
+	},
+	"devDependencies": {
+		"mocha-phantomjs": ">= 3.0.0",
+		"mocha": "1.9.x",
+		"chai": ">= 1.7.2"
+	}
+}
