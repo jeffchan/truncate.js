@@ -62,8 +62,9 @@
 
   function Truncate(element, options) {
     this.options = options || {};
-    options.showMore = options.showMore || '<a href="#">Show More…</a>';
-    options.showLess = options.showLess || '<a href="#">Show Less…</a>';
+    options.showMore = typeof options.showMore !== 'undefined' ? options.showMore : '<a href="#">Show More…</a>';
+    options.showLess = typeof options.showLess !== 'undefined' ? options.showLess : '<a href="#">Show More…</a>';
+    console.log(this.options);
 
     this.element = element;
     this.originalHTML = element.innerHTML;
