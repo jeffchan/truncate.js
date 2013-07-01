@@ -5,7 +5,8 @@
   }
 
   function height(element) {
-    return element.clientHeight - parseFloat(getStyle(element, 'padding-top')) - parseFloat(getStyle(element, 'padding-bottom'));
+    // console.log(window.document.defaultView.getComputedStyle(element));
+    return element.clientHeight - parseFloat(getStyle(element, 'paddingTop')) - parseFloat(getStyle(element, 'paddingBottom'));
   }
 
   function trim(str) {
@@ -64,7 +65,6 @@
     this.options = options || {};
     options.showMore = typeof options.showMore !== 'undefined' ? options.showMore : '<a href="#">Show More…</a>';
     options.showLess = typeof options.showLess !== 'undefined' ? options.showLess : '<a href="#">Show More…</a>';
-    console.log(this.options);
 
     this.element = element;
     this.originalHTML = element.innerHTML;
@@ -113,7 +113,7 @@
       this.element.innerHTML = chunk;
 
       // console.log(low, high, mid, chunkLength);
-      // console.log(chunk, height(this.element) > this.maxHeight);
+      // console.log(chunk, height(this.element), this.maxHeight);
 
       if (height(this.element) > this.maxHeight) {
         high = chunkLength - 1;
