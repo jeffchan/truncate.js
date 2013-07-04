@@ -87,27 +87,39 @@
       return;
     }
 
-    this.originalHTML = this.originalHTML;
-
     var excludeRanges = findElementNodeRanges(this.element.childNodes);
 
+    this._truncate(excludeRanges);
+
+    this.element.style.visibility = 'visible';
+  };
+
+  Truncate.prototype.expand = function () {
+    this.element.innerHTML = this.originalHTML + this.options.showLess;
+  };
+
+  Truncate.prototype.collapse = function () {
+    this.element.innerHTML = this.cached;
+  };
+
+  Truncate.prototype._truncate = function (excludeRanges) {
     var mid,
         low = 0,
         high = this.originalHTML.length,
         maxChunk = '',
         chunk,
         chunkLength,
-        prevchunkLength = 0;
+        prevChunkLength = 0;
 
     // Binary Search
     while (low <= high) {
       mid = low + ((high - low) >> 1); // Integer division
       chunkLength = indexNotInRange(excludeRanges, mid);
 
-      if (prevchunkLength === chunkLength) {
+      if (prevChunkLength === chunkLength) {
         break; // Prevent infinite loop
       }
-      prevchunkLength = chunkLength;
+      prevChunkLength = chunkLength;
 
       chunk = trim(this.originalHTML.substr(0, chunkLength + 1)) + this.options.showMore;
       this.element.innerHTML = chunk;
@@ -124,17 +136,9 @@
       }
     }
 
-    this.cached = this.element.innerHTML = maxChunk;
+    this.element.innerHTML = ''; // Reset scrollbar
 
-    this.element.style.visibility = 'visible';
-  };
-
-  Truncate.prototype.expand = function () {
-    this.element.innerHTML = this.originalHTML + this.options.showLess;
-  };
-
-  Truncate.prototype.collapse = function () {
-    this.element.innerHTML = this.cached;
+    this.element.innerHTML = this.cached = maxChunk;
   };
 
   module.Truncate = Truncate;
