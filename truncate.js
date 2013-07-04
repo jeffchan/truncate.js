@@ -5,7 +5,6 @@
   }
 
   function height(element) {
-    // console.log(window.document.defaultView.getComputedStyle(element));
     return element.clientHeight - parseFloat(getStyle(element, 'paddingTop')) - parseFloat(getStyle(element, 'paddingBottom'));
   }
 
@@ -123,9 +122,6 @@
 
       chunk = trim(this.originalHTML.substr(0, chunkLength + 1)) + this.options.showMore;
       this.element.innerHTML = chunk;
-
-      // console.log(low, high, mid, chunkLength);
-      // console.log(chunk, height(this.element), this.maxHeight);
 
       if (height(this.element) > this.maxHeight) {
         high = chunkLength - 1;
