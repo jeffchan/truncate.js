@@ -13,8 +13,8 @@
   }
 
   function indexNotInRange(rangesExcluded, index) {
-    var i, range, lower, upper, skip;
-    for (i = 0; i < rangesExcluded.length; i++) {
+    var i, length, range, lower, upper, skip;
+    for (i = 0, length = rangesExcluded.length; i < length; i++) {
       range = rangesExcluded[i];
       lower = range[0];
       upper = range[1];
