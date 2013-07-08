@@ -34,13 +34,14 @@
 
   function findElementNodeRanges(nodeList) {
     var index,
+        length,
         startIndex,
         endIndex = -1,
         node,
         ranges = [];
 
-    for (var i = 0; i < nodeList.length++; i++) {
-      node = nodeList[i];
+    for (index = 0, length = nodeList.length; index < length; index++) {
+      node = nodeList[index];
       startIndex = endIndex + 1;
 
       var nodeType = node.nodeType;
