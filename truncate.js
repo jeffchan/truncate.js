@@ -102,7 +102,7 @@
     this.element.innerHTML = this.cached;
   };
 
-  Truncate.prototype._truncate = function (excludeRanges) {
+  Truncate.prototype._truncate = function (ranges) {
     var mid,
         low = 0,
         high = this.originalHTML.length,
@@ -114,7 +114,7 @@
     // Binary Search
     while (low <= high) {
       mid = low + ((high - low) >> 1); // Integer division
-      chunkLength = indexNotInRange(excludeRanges, mid);
+      chunkLength = indexNotInRange(ranges, mid);
 
       if (prevChunkLength === chunkLength) {
         break; // Prevent infinite loop
