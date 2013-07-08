@@ -46,11 +46,11 @@
 
       var nodeType = node.nodeType;
       if (nodeType === window.Node.TEXT_NODE) {
-        endIndex = startIndex + node.textContent.length - 1;
+        endIndex = startIndex + node.nodeValue.length - 1;
       } else if (nodeType === window.Node.COMMENT_NODE) {
         // length + 7 for HTML comment opening/closing tags
         // e.g.) <!--MY_COMMENT--> 10+7=17
-        endIndex = startIndex + node.textContent.length + 7 - 1;
+        endIndex = startIndex + node.nodeValue.length + 7 - 1;
         ranges.push([startIndex, endIndex, true]);
       } else if (nodeType === window.Node.ELEMENT_NODE) {
         endIndex = startIndex + node.outerHTML.length - 1;
