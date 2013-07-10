@@ -61,15 +61,53 @@
     return ranges;
   }
 
+  function truncateElement(element, excludeRanges, options) {
+    var originalHTML = element.innerHTML,
+        mid,
+        low = 0,
+        high = originalHTML.length,
+        maxChunk = '',
+        chunk,
+        chunkLength,
+        prevChunkLength = 0;
+
+    // Binary Search
+    while (low <= high) {
+      mid = low + ((high - low) >> 1); // Integer division
+      chunkLength = indexNotInRange(excludeRanges, mid);
+
+      var clipped = chunkLength !== mid;
+
+      if (prevChunkLength === chunkLength) {
+        break; // Prevent infinite loop
+      }
+      prevChunkLength = chunkLength;
+
+      chunk = trim(originalHTML.substr(0, chunkLength + 1)) + options.showMore;
+      element.innerHTML = chunk;
+
+      if (height(element) > options.maxHeight) {
+        high = chunkLength - 1;
+      } else {
+        low = chunkLength + 1;
+
+        maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
+      }
+    }
+
+    return maxChunk;
+  }
+
   function Truncate(element, options) {
     this.options = options || {};
     options.showMore = typeof options.showMore !== 'undefined' ? options.showMore : '…';
     options.showLess = typeof options.showLess !== 'undefined' ? options.showLess : '';
 
+    this.options.maxHeight = options.lines * options.lineHeight;
+
     this.element = element;
     this.originalHTML = element.innerHTML;
     this.cached = '';
-    this.maxHeight = options.lines * options.lineHeight;
 
     this.update();
   }
@@ -87,9 +125,11 @@
       return;
     }
 
-    var excludeRanges = findElementNodeRanges(this.element.childNodes);
+    var el = this.element;
+    var excludeRanges = findElementNodeRanges(el.childNodes);
 
-    this._truncate(excludeRanges);
+    this.cached = truncateElement(el, excludeRanges, this.options);
+    el.innerHTML = this.cached;
 
     this.element.style.visibility = 'visible';
   };
@@ -100,42 +140,6 @@
 
   Truncate.prototype.collapse = function () {
     this.element.innerHTML = this.cached;
-  };
-
-  Truncate.prototype._truncate = function (ranges) {
-    var mid,
-        low = 0,
-        high = this.originalHTML.length,
-        maxChunk = '',
-        chunk,
-        chunkLength,
-        prevChunkLength = 0;
-
-    // Binary Search
-    while (low <= high) {
-      mid = low + ((high - low) >> 1); // Integer division
-      chunkLength = indexNotInRange(ranges, mid);
-
-      if (prevChunkLength === chunkLength) {
-        break; // Prevent infinite loop
-      }
-      prevChunkLength = chunkLength;
-
-      chunk = trim(this.originalHTML.substr(0, chunkLength + 1)) + this.options.showMore;
-      this.element.innerHTML = chunk;
-
-      if (height(this.element) > this.maxHeight) {
-        high = chunkLength - 1;
-      } else {
-        low = chunkLength + 1;
-
-        maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
-      }
-    }
-
-    this.element.innerHTML = ''; // Reset scrollbar
-
-    this.element.innerHTML = this.cached = maxChunk;
   };
 
   module.Truncate = Truncate;
