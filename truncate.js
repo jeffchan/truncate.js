@@ -24,7 +24,7 @@
           // Skip over a comment node
           return upper;
         } else {
-          // Find nearest cutoff point
+          // Snap to nearest acceptable point
           return ((index - lower) < (upper - index)) ? lower - 1 : upper + 1;
         }
       }
