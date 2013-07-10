@@ -12,90 +12,48 @@
     return (str || '').replace(/^(\s|\u00A0)+|(\s|\u00A0)+$/g, ''); // from jQuery
   }
 
-  function indexNotInRange(rangesExcluded, index) {
-    var i, length, range, lower, upper, skip;
-    for (i = 0, length = rangesExcluded.length; i < length; i++) {
-      range = rangesExcluded[i];
-      lower = range[0];
-      upper = range[1];
-      skip = range[2];
-      if (range.length >= 2 && lower <= index && index <= upper) {
-        if (skip) {
-          // Skip over a comment node
-          return upper;
-        } else {
-          // Snap to nearest acceptable point
-          return ((index - lower) < (upper - index)) ? lower - 1 : upper + 1;
-        }
+  function getHTMLInRange(node, startIndex, endIndex) {
+    var childNodes = node.childNodes,
+        length = childNodes.length,
+        html = '',
+        index, childNode;
+
+    for (index = startIndex; index <= endIndex && index < length; index++) {
+      childNode = childNodes[index];
+      if (childNode.nodeType === childNode.COMMENT_NODE) {
+        html += '<!--' + childNode.nodeValue + '-->';
+      } else {
+        html += childNode.outerHTML || childNode.nodeValue;
       }
     }
-    return index;
+    return html;
   }
 
-  function findElementNodeRanges(nodeList) {
-    var index,
-        length,
-        startIndex,
-        endIndex = -1,
-        node,
-        ranges = [];
-
-    for (index = 0, length = nodeList.length; index < length; index++) {
-      node = nodeList[index];
-      startIndex = endIndex + 1;
-
-      var nodeType = node.nodeType;
-      if (nodeType === window.Node.TEXT_NODE) {
-        endIndex = startIndex + node.nodeValue.length - 1;
-      } else if (nodeType === window.Node.COMMENT_NODE) {
-        // length + 7 for HTML comment opening/closing tags
-        // e.g.) <!--MY_COMMENT--> 10+7=17
-        endIndex = startIndex + node.nodeValue.length + 7 - 1;
-        ranges.push([startIndex, endIndex, true]);
-      } else if (nodeType === window.Node.ELEMENT_NODE) {
-        endIndex = startIndex + node.outerHTML.length - 1;
-        ranges.push([startIndex, endIndex, false]);
-      }
-    }
-
-    return ranges;
-  }
-
-  function truncateElement(element, excludeRanges, options) {
-    var originalHTML = element.innerHTML,
+  // Truncate text node using binary search
+  function truncateTextNode(textNode, ancestorNode, options) {
+    var originalHTML = textNode.nodeValue,
         mid,
         low = 0,
         high = originalHTML.length,
-        maxChunk = '',
-        chunk,
-        chunkLength,
-        prevChunkLength = 0;
+        chunk = '',
+        maxChunk = '';
 
     // Binary Search
     while (low <= high) {
       mid = low + ((high - low) >> 1); // Integer division
-      chunkLength = indexNotInRange(excludeRanges, mid);
 
-      var clipped = chunkLength !== mid;
+      chunk = trim(originalHTML.substr(0, mid + 1)) + options.showMore;
+      textNode.nodeValue = chunk;
 
-      if (prevChunkLength === chunkLength) {
-        break; // Prevent infinite loop
-      }
-      prevChunkLength = chunkLength;
-
-      chunk = trim(originalHTML.substr(0, chunkLength + 1)) + options.showMore;
-      element.innerHTML = chunk;
-
-      if (height(element) > options.maxHeight) {
-        high = chunkLength - 1;
+      if (height(ancestorNode) > options.maxHeight) {
+        high = mid - 1;
       } else {
-        low = chunkLength + 1;
-
+        low = mid + 1;
         maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
       }
     }
 
-    return maxChunk;
+    textNode.nodeValue = maxChunk;
   }
 
   function Truncate(element, options) {
@@ -120,18 +78,62 @@
     this.element.style.visibility = 'hidden';
     this.originalHTML = this.element.innerHTML;
 
-    if (height(this.element) <= this.maxHeight) {
+    if (height(this.element) <= this.options.maxHeight) {
       this.element.style.visibility = 'visible';
       return;
     }
 
-    var el = this.element;
-    var excludeRanges = findElementNodeRanges(el.childNodes);
-
-    this.cached = truncateElement(el, excludeRanges, this.options);
-    el.innerHTML = this.cached;
+    this.recurse(this.element);
+    this.cached = this.element.innerHTML;
 
     this.element.style.visibility = 'visible';
+  };
+
+  Truncate.prototype.recurse = function (element) {
+    console.warn('Recurse on', element, 'with these child nodes: ', element.childNodes);
+
+    var originalHTML,
+        childNodes = element.childNodes,
+        length = childNodes.length;
+
+    if (length === 0) {
+
+      // Base case = text node
+
+      truncateTextNode(element, this.element, this.options);
+      return;
+
+    } else {
+
+      // Iterate backwards on the children nodes until we find the tipping node
+      // Recurse on that node
+
+      var index, node;
+      originalHTML = element.innerHTML;
+
+      for (index = length - 1; index >= 0; index--) {
+        node = childNodes[index];
+
+        var chunk = getHTMLInRange(element, 0, index);
+        element.innerHTML = chunk;
+
+        if (height(this.element) <= this.options.maxHeight) {
+
+          if (index + 1 <= length - 1) {
+            // Element is not the last child
+            element.innerHTML = originalHTML;
+            chunk += getHTMLInRange(element, index + 1, index + 1);
+            index += 1;
+          }
+
+          element.innerHTML = chunk;
+          return this.recurse(childNodes[index]);
+        }
+      }
+
+      return this.recurse(childNodes[0]);
+
+    }
   };
 
   Truncate.prototype.expand = function () {
