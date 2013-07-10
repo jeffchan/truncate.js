@@ -90,7 +90,6 @@
   };
 
   Truncate.prototype.recurse = function (element) {
-    console.warn('Recurse on', element, 'with these child nodes: ', element.childNodes);
 
     var originalHTML,
         childNodes = element.childNodes,
@@ -119,9 +118,9 @@
 
         if (height(this.element) <= this.options.maxHeight) {
 
+          // Check if element is not the last child
           if (index + 1 <= length - 1) {
-            // Element is not the last child
-            element.innerHTML = originalHTML;
+            element.innerHTML = originalHTML; // Reset HTML so original childNodes tree is available
             chunk += getHTMLInRange(element, index + 1, index + 1);
             index += 1;
           }
