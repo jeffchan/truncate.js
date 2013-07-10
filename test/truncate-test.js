@@ -36,21 +36,38 @@ describe('truncatejs', function () {
     assert.equal(this.div.clientHeight, 48);
   });
 
-  it('truncate two lines, leaving comments and child nodes intact', function () {
+  it('truncates through child nodes', function () {
     this.div.innerHTML = 'members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter Isaacson</em>';
-    this.div.style.width = '230px';
-    this.div.style['font-size'] = '12px';
-    this.div.style['line-height'] = '12px';
+    this.div.style.width = '234px';
+    this.div.style['font-size'] = '14px';
+    this.div.style['line-height'] = '20px';
 
     var truncated = new Truncate(this.div, {
       lines: 2,
-      lineHeight: 12,
+      lineHeight: 20,
       showMore: '',
       showLess: ''
     });
 
-    assert.equal(this.div.clientHeight, 24);
-    assert.equal(this.div.innerHTML, 'members, friends, adversaries, competitors, and colleagues--<!--- test -->');
+    assert.equal(this.div.clientHeight, 40);
+    assert.equal(this.div.innerHTML, 'members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter</em>');
+  });
+
+  it('truncates properly with nested nodes', function () {
+    this.div.innerHTML = '<div>members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter Isaacson</em></div>';
+    this.div.style.width = '234px';
+    this.div.style['font-size'] = '14px';
+    this.div.style['line-height'] = '20px';
+
+    var truncated = new Truncate(this.div, {
+      lines: 2,
+      lineHeight: 20,
+      showMore: '',
+      showLess: ''
+    });
+
+    assert.equal(this.div.clientHeight, 40);
+    assert.equal(this.div.innerHTML, '<div>members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter</em></div>');
   });
 });
 
