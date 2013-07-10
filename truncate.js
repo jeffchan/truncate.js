@@ -8,57 +8,13 @@
     return element.clientHeight - parseFloat(getStyle(element, 'paddingTop')) - parseFloat(getStyle(element, 'paddingBottom'));
   }
 
-  function trim(str) {
-    return (str || '').replace(/^(\s|\u00A0)+|(\s|\u00A0)+$/g, ''); // from jQuery
+  function cloneNode(node) {
+    return node.cloneNode(false);
   }
 
-  function indexNotInRange(rangesExcluded, index) {
-    var i, length, range, lower, upper, skip;
-    for (i = 0, length = rangesExcluded.length; i < length; i++) {
-      range = rangesExcluded[i];
-      lower = range[0];
-      upper = range[1];
-      skip = range[2];
-      if (range.length >= 2 && lower <= index && index <= upper) {
-        if (skip) {
-          // Skip over a comment node
-          return upper;
-        } else {
-          // Find nearest cutoff point
-          return ((index - lower) < (upper - index)) ? lower - 1 : upper + 1;
-        }
-      }
-    }
-    return index;
-  }
-
-  function findElementNodeRanges(nodeList) {
-    var index,
-        length,
-        startIndex,
-        endIndex = -1,
-        node,
-        ranges = [];
-
-    for (index = 0, length = nodeList.length; index < length; index++) {
-      node = nodeList[index];
-      startIndex = endIndex + 1;
-
-      var nodeType = node.nodeType;
-      if (nodeType === window.Node.TEXT_NODE) {
-        endIndex = startIndex + node.nodeValue.length - 1;
-      } else if (nodeType === window.Node.COMMENT_NODE) {
-        // length + 7 for HTML comment opening/closing tags
-        // e.g.) <!--MY_COMMENT--> 10+7=17
-        endIndex = startIndex + node.nodeValue.length + 7 - 1;
-        ranges.push([startIndex, endIndex, true]);
-      } else if (nodeType === window.Node.ELEMENT_NODE) {
-        endIndex = startIndex + node.outerHTML.length - 1;
-        ranges.push([startIndex, endIndex, false]);
-      }
-    }
-
-    return ranges;
+  function replaceNode(newNode, oldNode) {
+    oldNode.parentNode.replaceChild(newNode, oldNode);
+    return newNode;
   }
 
   function Truncate(element, options) {
@@ -67,8 +23,13 @@
     options.showLess = typeof options.showLess !== 'undefined' ? options.showLess : '';
 
     this.element = element;
-    this.originalHTML = element.innerHTML;
-    this.cached = '';
+    this.elementCloned = element.cloneNode(false);
+
+    var oldRange = document.createRange();
+    oldRange.selectNodeContents(this.element);
+    this.originalFragment = oldRange.cloneContents();
+
+    this.cachedFragment = null;
     this.maxHeight = options.lines * options.lineHeight;
 
     this.update();
@@ -79,63 +40,116 @@
       this.element.innerHTML = newHTML;
     }
 
-    this.element.style.visibility = 'hidden';
-    this.originalHTML = this.element.innerHTML;
+    // this.element.style.visibility = 'hidden';
 
     if (height(this.element) <= this.maxHeight) {
       this.element.style.visibility = 'visible';
       return;
     }
 
-    var excludeRanges = findElementNodeRanges(this.element.childNodes);
+    var range = document.createRange();
+    range.setStart(this.element, 0);
 
-    this._truncate(excludeRanges);
+    this.recurse(range, this.element);
+
+    this.cachedFragment = range.cloneContents();
+
+    this.collapse();
+
+    // console.log(this.originalFragment, this.cachedFragment);
 
     this.element.style.visibility = 'visible';
   };
 
+  Truncate.prototype.recurse = function (range, element) {
+    console.warn('parent', element.childNodes);
+    var rect,
+        childNodes = element.childNodes,
+        length = childNodes.length;
+    if (element.hasChildNodes()) {
+      if (length === 1 && childNodes[0].nodeType === window.Node.TEXT_NODE) {
+        return this.recurse(range, childNodes[0]);
+      }
+      // Iterate backwards on the childNodes until we find the tipping node
+      // recurse on that node
+
+      var index, node;
+      var skip = 0;
+
+      for (index = length - 1; index >= 0; index--) {
+        node = childNodes[index];
+        if (node.nodeType === window.Node.COMMENT_NODE) {
+          skip++;
+          continue;
+        }
+
+        range.setEnd(element, index);
+        rect = range.getBoundingClientRect();
+        console.log(index, range.toString(), rect.height, this.maxHeight);
+
+        // this.sub(range);
+        // if (height(this.element) > this.maxHeight) {
+        if (rect.height - 2 <= this.maxHeight) {
+          index = Math.min(length - 1, index + skip);
+          console.log('recurse on', index, childNodes[index]);
+          return this.recurse(range, childNodes[index]);
+        }
+      }
+
+      return this.recurse(range, childNodes[0]);
+
+    } else {
+      console.log('binary search');
+      // Text node here... Binary search to find the correct fit
+      var mid,
+          low = 0,
+          high = element.nodeValue.length,
+          max = 0;
+
+      // Binary Search
+      while (low <= high) {
+        mid = low + ((high - low) >> 1); // Integer division
+        range.setEnd(element, mid);
+        rect = range.getBoundingClientRect();
+
+        console.warn('----------------------------------------');
+        console.log(low, high, mid);
+        console.log(range);
+        console.log(rect.height, this.maxHeight, range.toString());
+        if (rect.height - 2 > this.maxHeight) {
+        // this.sub(range);
+        // console.log(height(this.element), this.maxHeight);
+        // if (height(this.element) > this.maxHeight) {
+          high = mid - 1;
+        } else {
+          low = mid + 1;
+          max = max > mid ? max : mid;
+        }
+      }
+
+      range.setEnd(element, max);
+      return range;
+    }
+  };
+
+  Truncate.prototype.sub = function (range) {
+    // TODO: add "show more" text
+    var newNode = cloneNode(this.element);
+    newNode.appendChild(range.cloneContents());
+    this.element = replaceNode(newNode, this.element);
+  };
+
   Truncate.prototype.expand = function () {
-    this.element.innerHTML = this.originalHTML + this.options.showLess;
+    // TODO: add "show less" text
+    var newNode = cloneNode(this.element);
+    newNode.appendChild(this.originalFragment.cloneNode(true));
+    this.element = replaceNode(newNode, this.element);
   };
 
   Truncate.prototype.collapse = function () {
-    this.element.innerHTML = this.cached;
-  };
-
-  Truncate.prototype._truncate = function (ranges) {
-    var mid,
-        low = 0,
-        high = this.originalHTML.length,
-        maxChunk = '',
-        chunk,
-        chunkLength,
-        prevChunkLength = 0;
-
-    // Binary Search
-    while (low <= high) {
-      mid = low + ((high - low) >> 1); // Integer division
-      chunkLength = indexNotInRange(ranges, mid);
-
-      if (prevChunkLength === chunkLength) {
-        break; // Prevent infinite loop
-      }
-      prevChunkLength = chunkLength;
-
-      chunk = trim(this.originalHTML.substr(0, chunkLength + 1)) + this.options.showMore;
-      this.element.innerHTML = chunk;
-
-      if (height(this.element) > this.maxHeight) {
-        high = chunkLength - 1;
-      } else {
-        low = chunkLength + 1;
-
-        maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
-      }
-    }
-
-    this.element.innerHTML = ''; // Reset scrollbar
-
-    this.element.innerHTML = this.cached = maxChunk;
+    var newNode = cloneNode(this.element);
+    newNode.appendChild(this.cachedFragment.cloneNode(true));
+    this.element = replaceNode(newNode, this.element);
   };
 
   module.Truncate = Truncate;
