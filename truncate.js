@@ -144,7 +144,7 @@
 
     this.element = element;
     this.originalHTML = element.innerHTML;
-    this.cached = null;
+    this.cachedHTML = null;
 
     this.update();
   }
@@ -164,7 +164,7 @@
     this.element.style.visibility = 'hidden';
 
     truncateNestedNode(this.element, this.element, this.options);
-    this.cached = this.element.innerHTML;
+    this.cachedHTML = this.element.innerHTML;
 
     this.element.style.visibility = visibility;
   };
@@ -174,7 +174,7 @@
   };
 
   Truncate.prototype.collapse = function () {
-    this.element.innerHTML = this.cached;
+    this.element.innerHTML = this.cachedHTML;
   };
 
   module.Truncate = Truncate;
