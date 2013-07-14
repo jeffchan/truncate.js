@@ -64,15 +64,21 @@
 
     if (length === 0) {
 
-      // Base case = text node
+      // Base case: single element remaining
 
-      truncateTextNode(element, rootNode, options);
+      if (element.nodeType === element.TEXT_NODE) {
+        // Truncate the text node
+        truncateTextNode(element, rootNode, options);
+      } else {
+        // Remove the node itself.
+        element.parentNode.removeChild(element);
+      }
+
       return;
 
     } else {
 
-      // Iterate backwards on the children nodes until we find the tipping node
-      // Recurse on that node
+      // Recursive case: iterate backwards on children nodes until tipping node is found
 
       var index, node;
       originalHTML = element.innerHTML;
