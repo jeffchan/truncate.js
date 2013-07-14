@@ -126,6 +126,9 @@
    *     showLess: '<a class="show-more">Show Less</a>'
    *   });
    *
+   *   // Update HTML
+   *   truncated.update('This is not very odd.');
+   *
    *   // Undo truncation
    *   truncated.expand();
    *
