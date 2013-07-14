@@ -154,18 +154,19 @@
       this.element.innerHTML = newHTML;
     }
 
-    this.element.style.visibility = 'hidden';
     this.originalHTML = this.element.innerHTML;
 
     if (height(this.element) <= this.options.maxHeight) {
-      this.element.style.visibility = 'visible';
       return;
     }
+
+    var visibility = this.element.style.visibility;
+    this.element.style.visibility = 'hidden';
 
     truncateNestedNode(this.element, this.element, this.options);
     this.cached = this.element.innerHTML;
 
-    this.element.style.visibility = 'visible';
+    this.element.style.visibility = visibility;
   };
 
   Truncate.prototype.expand = function () {
