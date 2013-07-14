@@ -144,7 +144,7 @@
 
     this.element = element;
     this.originalHTML = element.innerHTML;
-    this.cached = '';
+    this.cached = null;
 
     this.update();
   }
