@@ -150,12 +150,12 @@
   }
 
   Truncate.prototype.update = function (newHTML) {
+    // Update HTML if provided, otherwise default to current inner HTML.
     if (newHTML) {
-      this.element.innerHTML = newHTML;
+      this.originalHTML = this.element.innerHTML = newHTML;
     }
 
-    this.originalHTML = this.element.innerHTML;
-
+    // Already meets height requirement
     if (height(this.element) <= this.options.maxHeight) {
       return;
     }
