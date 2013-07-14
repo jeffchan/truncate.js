@@ -70,7 +70,7 @@
         // Truncate the text node
         truncateTextNode(element, rootNode, options);
       } else {
-        // Remove the node itself.
+        // Remove the node itself
         element.parentNode.removeChild(element);
       }
 
