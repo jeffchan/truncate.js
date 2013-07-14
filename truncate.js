@@ -30,7 +30,7 @@
   }
 
   // Truncate text node using binary search
-  function truncateTextNode(textNode, ancestorNode, options) {
+  function truncateTextNode(textNode, rootNode, options) {
     var originalHTML = textNode.nodeValue,
         mid,
         low = 0,
@@ -45,7 +45,7 @@
       chunk = trim(originalHTML.substr(0, mid + 1)) + options.showMore;
       textNode.nodeValue = chunk;
 
-      if (height(ancestorNode) > options.maxHeight) {
+      if (height(rootNode) > options.maxHeight) {
         high = mid - 1;
       } else {
         low = mid + 1;
