@@ -53,6 +53,23 @@ describe('truncatejs', function () {
     assert.equal(this.div.innerHTML, 'members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter</em>');
   });
 
+  it('truncates through manual line breaks', function () {
+    this.div.innerHTML = 'members, friends, adversaries,<br/><br/>competitors, and colleagues';
+    this.div.style.width = '230px';
+    this.div.style['font-size'] = '14px';
+    this.div.style['line-height'] = '20px';
+
+    var truncated = new Truncate(this.div, {
+      lines: 1,
+      lineHeight: 20,
+      showMore: '',
+      showLess: ''
+    });
+
+    assert.equal(this.div.clientHeight, 20);
+    assert.equal(this.div.innerHTML, 'members, friends, adversaries,<br>');
+  });
+
   it('truncates properly with nested nodes', function () {
     this.div.innerHTML = '<div>members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter Isaacson</em></div>';
     this.div.style.width = '234px';
