@@ -13,10 +13,10 @@
   }
 
   function getHTMLInRange(node, startIndex, endIndex) {
+    var index, childNode;
     var childNodes = node.childNodes,
         length = childNodes.length,
-        html = '',
-        index, childNode;
+        html = '';
 
     for (index = startIndex; index <= endIndex && index < length; index++) {
       childNode = childNodes[index];
