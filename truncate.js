@@ -35,7 +35,7 @@
         mid,
         low = 0,
         high = originalHTML.length,
-        chunk = '',
+        chunk,
         maxChunk = '';
 
     // Binary Search
