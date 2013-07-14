@@ -58,8 +58,7 @@
 
   function truncateNestedNode(element, rootNode, options) {
 
-    var originalHTML,
-        childNodes = element.childNodes,
+    var childNodes = element.childNodes,
         length = childNodes.length;
 
     if (length === 0) {
@@ -81,7 +80,7 @@
       // Recursive case: iterate backwards on children nodes until tipping node is found
 
       var index, node;
-      originalHTML = element.innerHTML;
+      var originalHTML = element.innerHTML;
 
       for (index = length - 1; index >= 0; index--) {
         node = childNodes[index];
