@@ -79,13 +79,13 @@
 
       // Recursive case: iterate backwards on children nodes until tipping node is found
 
-      var index, node;
+      var index, node, chunk;
       var originalHTML = element.innerHTML;
 
       for (index = length - 1; index >= 0; index--) {
         node = childNodes[index];
 
-        var chunk = getHTMLInRange(element, 0, index);
+        chunk = getHTMLInRange(element, 0, index);
         element.innerHTML = chunk;
 
         if (height(rootNode) <= options.maxHeight) {
