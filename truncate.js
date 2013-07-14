@@ -56,6 +56,55 @@
     textNode.nodeValue = maxChunk;
   }
 
+  function truncateNestedNode(element, rootNode, options) {
+
+    var originalHTML,
+        childNodes = element.childNodes,
+        length = childNodes.length;
+
+    if (length === 0) {
+
+      // Base case = text node
+
+      truncateTextNode(element, rootNode, options);
+      return;
+
+    } else {
+
+      // Iterate backwards on the children nodes until we find the tipping node
+      // Recurse on that node
+
+      var index, node;
+      originalHTML = element.innerHTML;
+
+      for (index = length - 1; index >= 0; index--) {
+        node = childNodes[index];
+
+        var chunk = getHTMLInRange(element, 0, index);
+        element.innerHTML = chunk;
+
+        if (height(rootNode) <= options.maxHeight) {
+
+          // Check if element is not the last child
+          if (index + 1 <= length - 1) {
+            // Reset HTML so original childNodes tree is available
+            element.innerHTML = originalHTML;
+
+            chunk += getHTMLInRange(element, index + 1, index + 1);
+            element.innerHTML = chunk;
+
+            index += 1;
+          }
+
+          return truncateNestedNode(childNodes[index], rootNode, options);
+        }
+      }
+
+      return truncateNestedNode(childNodes[0], rootNode, options);
+
+    }
+  }
+
   function Truncate(element, options) {
     this.options = options || {};
     options.showMore = typeof options.showMore !== 'undefined' ? options.showMore : '…';
@@ -83,56 +132,10 @@
       return;
     }
 
-    this.recurse(this.element);
+    truncateNestedNode(this.element, this.element, this.options);
     this.cached = this.element.innerHTML;
 
     this.element.style.visibility = 'visible';
-  };
-
-  Truncate.prototype.recurse = function (element) {
-
-    var originalHTML,
-        childNodes = element.childNodes,
-        length = childNodes.length;
-
-    if (length === 0) {
-
-      // Base case = text node
-
-      truncateTextNode(element, this.element, this.options);
-      return;
-
-    } else {
-
-      // Iterate backwards on the children nodes until we find the tipping node
-      // Recurse on that node
-
-      var index, node;
-      originalHTML = element.innerHTML;
-
-      for (index = length - 1; index >= 0; index--) {
-        node = childNodes[index];
-
-        var chunk = getHTMLInRange(element, 0, index);
-        element.innerHTML = chunk;
-
-        if (height(this.element) <= this.options.maxHeight) {
-
-          // Check if element is not the last child
-          if (index + 1 <= length - 1) {
-            element.innerHTML = originalHTML; // Reset HTML so original childNodes tree is available
-            chunk += getHTMLInRange(element, index + 1, index + 1);
-            index += 1;
-          }
-
-          element.innerHTML = chunk;
-          return this.recurse(childNodes[index]);
-        }
-      }
-
-      return this.recurse(childNodes[0]);
-
-    }
   };
 
   Truncate.prototype.expand = function () {
