@@ -21,6 +21,8 @@
     for (index = startIndex; index <= endIndex && index < length; index++) {
       childNode = childNodes[index];
       if (childNode.nodeType === childNode.COMMENT_NODE) {
+        // Need the commend node HTML in order to reconstruct original DOM structure
+        // This manual way is the only way to get a comment node's HTML
         html += '<!--' + childNode.nodeValue + '-->';
       } else {
         html += childNode.outerHTML || childNode.nodeValue;
