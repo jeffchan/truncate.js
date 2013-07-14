@@ -111,6 +111,28 @@
     }
   }
 
+  /* Public: Creates an instance of Truncate.
+   *
+   * element - A DOM element to be truncated.
+   * options - An Object literal containing setup options.
+   *
+   * Examples:
+   *
+   *   var element = document.createElement('span');
+   *   element.innerHTML = 'This is<br>odd.';
+   *   var truncated = new Truncate(element, {
+   *     lines: 1,
+   *     lineHeight: 16,
+   *     showMore: '<a class="show-more">Show More</a>',
+   *     showLess: '<a class="show-more">Show Less</a>'
+   *   });
+   *
+   *   // Undo truncation
+   *   truncated.expand();
+   *
+   *   // Redo truncation
+   *   truncated.collapse();
+   */
   function Truncate(element, options) {
     this.options = options || {};
     options.showMore = typeof options.showMore !== 'undefined' ? options.showMore : '…';
