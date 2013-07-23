@@ -1,7 +1,9 @@
 (function (module, undefined) {
 
   function getStyle(element, property) {
-    return window.getComputedStyle(element)[property];
+    // IE8 and below does not support getComputedStyle. Use currentStyle instead.
+    var styles = (window.getComputedStyle && window.getComputedStyle(element) || element.currentStyle);
+    return parseFloat(styles[property]);
   }
 
   function height(element) {
