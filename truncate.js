@@ -151,6 +151,12 @@
     this.update();
   }
 
+  /* Public: Updates the inner HTML of the element and re-truncates.
+   *
+   * newHTML - The new HTML.
+   *
+   * Returns nothing.
+   */
   Truncate.prototype.update = function (newHTML) {
     // Update HTML if provided, otherwise default to current inner HTML.
     if (newHTML) {
@@ -171,10 +177,19 @@
     this.element.style.visibility = visibility;
   };
 
+  /* Public: Expands the element to show content in full.
+   *
+   * Returns nothing.
+   */
   Truncate.prototype.expand = function () {
     this.element.innerHTML = this.originalHTML + this.options.showLess;
   };
 
+  /* Public: Collapses the element to the truncated state.
+   * Uses the cached HTML from .update().
+   *
+   * Returns nothing.
+   */
   Truncate.prototype.collapse = function () {
     this.element.innerHTML = this.cachedHTML;
   };
