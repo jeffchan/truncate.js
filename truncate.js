@@ -6,8 +6,15 @@
     return parseFloat(styles[property]);
   }
 
+  // Return the content height
   function height(element) {
-    return element.clientHeight - parseFloat(getStyle(element, 'paddingTop')) - parseFloat(getStyle(element, 'paddingBottom'));
+    var total = getStyle(element, 'height');
+    var boxModel = getStyle(element, 'boxSizing');
+    if (boxModel === 'border-box') {
+      return total - getStyle(element, 'paddingTop') - getStyle(element, 'paddingBottom');
+    } else {
+      return total;
+    }
   }
 
   function trim(str) {
