@@ -92,6 +92,7 @@ describe('truncatejs', function () {
   box
     with margin
     with padding
+    with borders
 
   children elements
     floating elements
