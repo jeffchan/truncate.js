@@ -31,7 +31,7 @@
    * Returns trimmed string.
    */
   function trim(str) {
-    return (str || '').replace(/^(\s|\u00A0)+|(\s|\u00A0)+$/g, ''); // from jQuery
+    return (str || '').replace(/^(\s|\u00A0)+|(\s|\u00A0)+$/g, '');
   }
 
   /*
