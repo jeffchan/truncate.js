@@ -1,26 +1,42 @@
 (function (module, undefined) {
 
+  /*
+   *
+   */
   function getStyle(element, property) {
     // IE8 and below does not support getComputedStyle. Use currentStyle instead.
     var styles = (window.getComputedStyle && window.getComputedStyle(element) || element.currentStyle);
     return parseFloat(styles[property]);
   }
 
-  // Return the content height
+  /*
+   *
+   */
   function height(element) {
     var total = getStyle(element, 'height');
     var boxModel = getStyle(element, 'boxSizing');
     if (boxModel === 'border-box') {
       return total - getStyle(element, 'paddingTop') - getStyle(element, 'paddingBottom');
     } else {
+      // Assume content-box model
       return total;
     }
   }
 
+  /* Trims leading and trailing whitespace. Regular expression taken from jQuery.
+   * See https://github.com/jquery/jquery/blob/master/speed/jquery-basis.js
+   *
+   * str - The original string to trim.
+   *
+   * Returns trimmed string.
+   */
   function trim(str) {
     return (str || '').replace(/^(\s|\u00A0)+|(\s|\u00A0)+$/g, ''); // from jQuery
   }
 
+  /*
+   *
+   */
   function getHTMLInRange(node, startIndex, endIndex) {
     var index, childNode;
     var childNodes = node.childNodes,
@@ -40,7 +56,16 @@
     return html;
   }
 
-  // Truncate text node using binary search
+  /* Truncates a text node using binary search.
+   *
+   * textNode - The text node to truncate.
+   * rootNode - The root node (ancestor of the textNode) to measure the truncated height.
+   * options  - An object containing:
+   *            showMore  - The HTML string to append at the end of the string.
+   *            maxHeight - The maximum height for the root node.
+   *
+   * Returns nothing.
+   */
   function truncateTextNode(textNode, rootNode, options) {
     var originalHTML = textNode.nodeValue,
         mid,
