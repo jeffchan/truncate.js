@@ -14,6 +14,47 @@
     }
   }
 
+  function truncateNearestSibling($element, $rootNode, $after, options) {
+    var $parent = $element.parent();
+    var $prevSibling;
+
+    $element.remove();
+
+    // Take into account length of $after element previous inserted.
+    var afterLength = $after ? $after.length : 0;
+
+    if ($parent.contents().length > afterLength) {
+      // Valid previous sibling element (sharing same parent node) exists,
+      // so attempt to truncate it.
+
+      $prevSibling = $parent.contents().eq(-1 - afterLength);
+      return truncateTextContent($prevSibling, $rootNode, $after, options);
+
+    } else {
+
+      // No previous sibling element (sharing same parent node) exists.
+      // Therefore, search parent's sibling.
+
+      var $parentSibling = $parent.prev();
+      $prevSibling = $parentSibling.contents().eq(-1);
+
+      if ($prevSibling.length) {
+        // Because traversal is in-order so the algorithm already checked that
+        // this point meets the height requirement. As such, it's safe to truncate here.
+
+        setText($prevSibling[0], $prevSibling.text() + options.ellipsis);
+        $parent.remove();
+
+        if ($after.length) {
+          $parentSibling.append($after);
+        }
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /* Truncates the text content of a node using binary search.
    *
    * textNode - The node to truncate.
@@ -52,35 +93,7 @@
       setText(element, maxChunk);
       return true;
     } else {
-
-      // Backtrack
-      var $parent = $element.parent();
-      $element.remove();
-
-      var afterLength = $after ? $after.length : 0;
-
-      if ($parent.contents().length > afterLength) {
-
-        var $n = $parent.contents().eq(-1 - afterLength);
-        return truncateTextContent($n, $rootNode, $after, options);
-
-      } else {
-
-        var $prev = $parent.prev();
-        var $e = $prev.contents().eq(-1);
-        var e = $e[0];
-
-        if (e) {
-          setText(e, $e.text() + options.ellipsis);
-          $parent.remove();
-
-          if ($after.length) {
-            $prev.append($after);
-          }
-          return true;
-        }
-      }
-      return false;
+      return truncateNearestSibling($element, $rootNode, $after, options);
     }
   }
 
