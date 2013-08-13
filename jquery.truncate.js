@@ -56,6 +56,7 @@
   }
 
   /* Truncates the text content of a node using binary search.
+   * If no valid truncation point is found, attempt to truncate its nearest sibling.
    *
    * textNode - The node to truncate.
    * rootNode - The root node (ancestor of the textNode) to measure the truncated height.
@@ -63,7 +64,7 @@
    *            ellipsis  - The ellipsis string to append at the end of the truncation.
    *            maxHeight - The maximum height for the root node.
    *
-   * Returns nothing.
+   * Returns true if truncation happened, false otherwise.
    */
   function truncateTextContent($element, $rootNode, $after, options) {
     var element = $element[0];
@@ -122,6 +123,7 @@
 
       if ($after.length) {
         if ($.inArray(element.tagName.toLowerCase(), BLOCK_TAGS) >= 0) {
+          // Certain elements like <li> should not be appended to.
           $element.after($after);
         } else {
           $element.append($after);
@@ -205,6 +207,7 @@
         this.original = this.element.innerHTML = html;
       }
 
+      // Wrap the contents in order to ignore container's margin/padding.
       var $wrap = this.$element.wrapInner('<div/>').children();
       $wrap.css({
         height : 'auto',
@@ -220,6 +223,7 @@
         this.cachedHTML = this.element.innerHTML;
       }
 
+      // Restore the wrapped contents
       $wrap.replaceWith($wrap.contents());
     },
 
