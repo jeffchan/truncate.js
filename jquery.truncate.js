@@ -14,6 +14,16 @@
     }
   }
 
+  /* Truncates the text content of a node using binary search.
+   *
+   * textNode - The node to truncate.
+   * rootNode - The root node (ancestor of the textNode) to measure the truncated height.
+   * options  - An object containing:
+   *            ellipsis  - The ellipsis string to append at the end of the truncation.
+   *            maxHeight - The maximum height for the root node.
+   *
+   * Returns nothing.
+   */
   function truncateTextContent($element, $rootNode, $after, options) {
     var element = $element[0];
     var original = $element.text();
@@ -120,6 +130,31 @@
     return truncated;
   }
 
+  /* Public: Creates an instance of Truncate.
+   *
+   * element - A DOM element to be truncated.
+   * options - An Object literal containing setup options.
+   *
+   * Examples:
+   *
+   *   var element = document.createElement('span');
+   *   element.innerHTML = 'This is<br>odd.';
+   *   var truncated = new Truncate(element, {
+   *     lines: 1,
+   *     lineHeight: 16,
+   *     showMore: '<a class="show-more">Show More</a>',
+   *     showLess: '<a class="show-less">Show Less</a>'
+   *   });
+   *
+   *   // Update HTML
+   *   truncated.update('This is not very odd.');
+   *
+   *   // Undo truncation
+   *   truncated.expand();
+   *
+   *   // Redo truncation
+   *   truncated.collapse();
+   */
   function Truncate(element, options) {
     this.element = element;
     this.$element = $(element);
@@ -145,6 +180,12 @@
 
   Truncate.prototype = {
 
+    /* Public: Updates the inner HTML of the element and re-truncates.
+     *
+     * newHTML - The new HTML.
+     *
+     * Returns nothing.
+     */
     update: function (html) {
       // Update HTML if provided, otherwise default to current inner HTML.
       if (html) {
@@ -169,10 +210,19 @@
       $wrap.replaceWith($wrap.contents());
     },
 
+    /* Public: Expands the element to show content in full.
+     *
+     * Returns nothing.
+     */
     expand: function () {
       this.element.innerHTML = this.originalHTML + this.options.showLess;
     },
 
+    /* Public: Collapses the element to the truncated state.
+     * Uses the cached HTML from .update().
+     *
+     * Returns nothing.
+     */
     collapse: function () {
       this.element.innerHTML = this.cachedHTML;
     }
