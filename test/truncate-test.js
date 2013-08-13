@@ -1,108 +1,200 @@
-describe('truncatejs', function () {
+describe('truncate.js', function () {
   beforeEach(function () {
-    var div = this.div = document.createElement('div');
-    div.style.visibility = 'hidden';
-    document.body.appendChild(div);
+    var $fixture = this.$fixture = jQuery('<div/>');
+
+    this.$fixture.css({
+      visibility: 'hidden',
+      font: 'normal 16px/20px Times',
+      width: '250px'
+    });
+
+    this.$fixture.html("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
+
+    var defaults = {
+      lineHeight: 20,
+      lines: 1,
+      ellipsis: '… ',
+      showMore: '<a href="#">More</a>',
+      showLess: '<a href="#">Less</a>'
+    };
+
+    this.run = function (options) {
+      options = $.extend({}, defaults, options);
+      $fixture.truncate(options);
+    };
+
+    this.fixture = this.$fixture[0];
+    document.body.appendChild(this.fixture);
   });
 
   afterEach(function () {
-    document.body.removeChild(this.div);
+    this.fixture.parentNode.removeChild(this.fixture);
   });
 
-  it('truncate nothing', function () {
-    this.div.innerHTML = 'Four lines';
-    this.div.style['font-size'] = '12px';
-    this.div.style['line-height'] = '12px';
+  it('truncates nothing when content fits', function () {
+    this.run({ lines: 10 });
 
-    var truncated = new Truncate(this.div, {
-      lines: 4,
-      lineHeight: 12
+    assert.equal(this.fixture.clientHeight, 200);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
+  });
+
+  it('truncate correctly when container has no margin or padding', function () {
+    this.run({ lines: 5 });
+
+    assert.equal(this.fixture.clientHeight, 100);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
+  });
+
+  it('truncate correctly when container has margin', function () {
+    this.$fixture.css({ margin: '20px' });
+    this.run({ lines: 5 });
+
+    assert.equal(this.fixture.clientHeight, 100);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
+  });
+
+  it('truncate correctly when container has padding', function () {
+    this.$fixture.css({ padding: '20px' });
+    this.run({ lines: 5 });
+
+    assert.equal(this.fixture.clientHeight, 140);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
+  });
+
+  it('truncate correctly when container has margin and padding', function () {
+    this.$fixture.css({ padding: '20px', margin: '20px' });
+    this.run({ lines: 5 });
+
+    assert.equal(this.fixture.clientHeight, 140);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
+  });
+
+  it('truncate correctly when container has padding and border', function () {
+    this.$fixture.css({ padding: '20px', border: '10px solid black' });
+    this.run({ lines: 5 });
+
+    assert.equal(this.fixture.clientHeight, 140);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
+  });
+
+  describe('when box sizing is border-box', function () {
+    beforeEach(function () {
+      this.$fixture.css('box-sizing', 'border-box');
     });
 
-    assert.equal(this.div.clientHeight, 12);
-  });
+    it('truncate correctly when container has margin', function () {
+      this.$fixture.css({ margin: '20px' });
+      this.run({ lines: 5 });
 
-  it('truncate four lines', function () {
-    this.div.innerHTML = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor';
-    this.div.style.width = '50px';
-    this.div.style['font-size'] = '12px';
-    this.div.style['line-height'] = '12px';
-
-    var truncated = new Truncate(this.div, {
-      lines: 4,
-      lineHeight: 12
+      assert.equal(this.fixture.clientHeight, 100);
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
     });
 
-    assert.equal(this.div.clientHeight, 48);
-  });
+    it('truncate correctly when container has padding', function () {
+      this.$fixture.css({ padding: '20px' });
+      this.run({ lines: 5 });
 
-  it('truncates through child nodes', function () {
-    this.div.innerHTML = 'members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter Isaacson</em>';
-    this.div.style.width = '234px';
-    this.div.style['font-size'] = '14px';
-    this.div.style['line-height'] = '20px';
-
-    var truncated = new Truncate(this.div, {
-      lines: 2,
-      lineHeight: 20,
-      showMore: '',
-      showLess: ''
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ev… <a href=\"#\">More</a>");
     });
 
-    assert.equal(this.div.clientHeight, 40);
-    assert.equal(this.div.innerHTML, 'members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter</em>');
-  });
+    it('truncate correctly when container has margin and padding', function () {
+      this.$fixture.css({ padding: '20px', margin: '20px' });
+      this.run({ lines: 5 });
 
-  it('truncates through manual line breaks', function () {
-    this.div.innerHTML = 'members, friends, adversaries,<br/><br/>competitors, and colleagues';
-    this.div.style.width = '230px';
-    this.div.style['font-size'] = '14px';
-    this.div.style['line-height'] = '20px';
-
-    var truncated = new Truncate(this.div, {
-      lines: 1,
-      lineHeight: 20,
-      showMore: '',
-      showLess: ''
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ev… <a href=\"#\">More</a>");
     });
 
-    assert.equal(this.div.clientHeight, 20);
-    assert.equal(this.div.innerHTML, 'members, friends, adversaries,<br>');
+    it('truncate correctly when container has padding and border', function () {
+      this.$fixture.css({ padding: '20px', border: '10px solid black' });
+      this.run({ lines: 5 });
+
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard d… <a href=\"#\">More</a>");
+    });
   });
 
-  it('truncates properly with nested nodes', function () {
-    this.div.innerHTML = '<div>members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter Isaacson</em></div>';
-    this.div.style.width = '234px';
-    this.div.style['font-size'] = '14px';
-    this.div.style['line-height'] = '20px';
+  describe('when children elements are wrapped', function () {
+    it('handles single block element wrap', function () {
+      this.$fixture.html('<div>Members, friends, adversaries, competitors, and colleagues</div>');
+      this.$fixture.css('width', '240px');
 
-    var truncated = new Truncate(this.div, {
-      lines: 2,
-      lineHeight: 20,
-      showMore: '',
-      showLess: ''
+      this.run({ lines: 1});
+
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversarie… <a href=\"#\">More</a></div>");
     });
 
-    assert.equal(this.div.clientHeight, 40);
-    assert.equal(this.div.innerHTML, '<div>members, friends, adversaries, competitors, and colleagues--<!--- test --><em>Walter</em></div>');
+    it('handles double block element wrap', function () {
+      this.$fixture.html('<div><div>Members, friends, adversaries, competitors, and colleagues</div></div>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 1});
+
+      assert.equal(this.$fixture.html(), "<div><div>Members, friends, adversarie… <a href=\"#\">More</a></div></div>");
+    });
+
+    it('handles inline element wrap', function () {
+      this.$fixture.html('<span><span>Members, friends, adversaries, competitors, and colleagues</span></span>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 1});
+
+      assert.equal(this.$fixture.html(), "<span><span>Members, friends, adversarie… <a href=\"#\">More</a></span></span>");
+    });
+
+    it('handles single block element with margin wrap', function () {
+      this.$fixture.html('<p style="margin: 10px; padding: 0;">Members, friends, adversaries, competitors, and colleagues</p>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 1});
+
+      assert.equal(this.$fixture.html(), "<p style=\"margin: 10px; padding: 0;\">Members, friends, adversa… <a href=\"#\">More</a></p>");
+    });
   });
+
+  describe('when children elements are nested', function () {
+    it('ignores comment nodes', function () {
+      this.$fixture.html('Lorem Ipsum is simply dummy texts of the printing and typesettin<!--- test -->g industry.');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 2});
+
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy texts of the printing and typesettin… <a href=\"#\">More</a>");
+    });
+
+    it('handles single break tags', function () {
+      this.$fixture.html('<div>Members, friends, adversarie<br/>s, competitors, and colleagues</div>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 1});
+
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversarie… <a href=\"#\">More</a></div>");
+    });
+
+    it('handles double break tags', function () {
+      this.$fixture.html('<div>Members, friends, adversarie<br/><br/>s, competitors, and colleagues</div>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 1});
+
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversarie… <a href=\"#\">More</a></div>");
+    });
+
+    it('leaves single level lists intact', function () {
+      this.$fixture.html('<ul><li>Members</li><li>Friends</li><li>Adversaries</li></ul>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 2});
+
+      assert.equal(this.$fixture.html(), "<ul><li>Members</li><li>Friends… <a href=\"#\">More</a></li></ul>");
+    });
+
+    it('leaves double level lists intact', function () {
+      this.$fixture.html('<ol><li>Members</li><li>Friends<ul><li>Noobs</li><li>Educators</li></ul></li><li>Adversaries</li></ol>');
+      this.$fixture.css('width', '240px');
+
+      this.run({ lines: 3});
+
+      assert.equal(this.$fixture.html(), "<ol><li>Members</li><li>Friends<ul><li>Noobs… <a href=\"#\">More</a></li></ul></li></ol>");
+    });
+  });
+
 });
-
-/* Scenario:
-  box
-    with margin
-    with padding
-    with borders
-
-  children elements
-    floating elements
-    inline elements
-    block elements
-
-  with comments
-
-  nested tags
-
-  <div id="test" style="width: 330px; border: 1px solid black;"> has written a riveting story of the roller-coaster life and searingly intense personality of a creative entrepreneur whose passion for perfection and ferocious drive revolutionized six industries: personal computers, animated movies, music, phones, tablet computing, and digital publishing.
-At a time when America is seeking ways to sustain its innovative edge, and when societies around the world are trying to build digital-age economies, Jobs stands as the ultimate icon of inventiveness and applied imagination. He knew that the best way to create value in the twenty-first century was to connect creativity with technology. He built a company where leaps of the imagination were combined with remarkable feats of engineering.</div>
-*/

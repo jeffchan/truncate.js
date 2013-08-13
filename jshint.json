@@ -1,5 +1,7 @@
 {
   "globals": {
+    "jQuery": false,
+    "$": false
   },
   "node": false,
   "browser": true,
