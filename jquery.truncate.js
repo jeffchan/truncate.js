@@ -1,4 +1,4 @@
-(function ($, undefined) {
+(function (module, $, undefined) {
 
   var BLOCK_TAGS = ['table', 'thead', 'tbody', 'tfoot', 'tr', 'col', 'colgroup', 'object', 'embed', 'param', 'ol', 'ul', 'dl', 'blockquote', 'select', 'optgroup', 'option', 'textarea', 'script', 'style'];
 
@@ -279,4 +279,6 @@
     });
   };
 
-})(jQuery);
+  module.Truncate = Truncate;
+
+})(this, jQuery);
