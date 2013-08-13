@@ -14,6 +14,18 @@
     }
   }
 
+  /* Truncate the nearest sibling node.
+   * If no valid immediate sibling is found, traverse one level up to a cousin node.
+   *
+   * $element  - The jQuery node to truncate.
+   * $rootNode - The jQuery root node to measure the truncated height.
+   * $clipNode - The jQuery node to insert right after the truncation point.
+   * options   - An object containing:
+   *             ellipsis  - The ellipsis string to append at the end of the truncation.
+   *             maxHeight - The maximum height for the root node.
+   *
+   * Returns true if truncation happened, false otherwise.
+   */
   function truncateNearestSibling($element, $rootNode, $clipNode, options) {
     var $parent = $element.parent();
     var $prevSibling;
@@ -24,9 +36,9 @@
     var clipLength = $clipNode ? $clipNode.length : 0;
 
     if ($parent.contents().length > clipLength) {
+
       // Valid previous sibling element (sharing same parent node) exists,
       // so attempt to truncate it.
-
       $prevSibling = $parent.contents().eq(-1 - clipLength);
       return truncateTextContent($prevSibling, $rootNode, $clipNode, options);
 
@@ -39,9 +51,9 @@
       $prevSibling = $parentSibling.contents().eq(-1);
 
       if ($prevSibling.length) {
+
         // Because traversal is in-order so the algorithm already checked that
         // this point meets the height requirement. As such, it's safe to truncate here.
-
         setText($prevSibling[0], $prevSibling.text() + options.ellipsis);
         $parent.remove();
 
@@ -59,11 +71,11 @@
    * If no valid truncation point is found, attempt to truncate its nearest sibling.
    *
    * $textNode - The jQuery node to truncate.
-   * $rootNode - The jQuery root node (ancestor of the textNode) to measure the truncated height.
+   * $rootNode - The jQuery root node to measure the truncated height.
    * $clipNode - The jQuery node to insert right after the truncation point.
-   * options  - An object containing:
-   *            ellipsis  - The ellipsis string to append at the end of the truncation.
-   *            maxHeight - The maximum height for the root node.
+   * options   - An object containing:
+   *             ellipsis  - The ellipsis string to append at the end of the truncation.
+   *             maxHeight - The maximum height for the root node.
    *
    * Returns true if truncation happened, false otherwise.
    */
@@ -99,6 +111,17 @@
     }
   }
 
+  /* Recursively truncates a nested node. Traverses the children node tree in-rder.
+   *
+   * $element  - The jQuery nested node to truncate.
+   * $rootNode - The jQuery root node to measure the truncated height.
+   * $clipNode - The jQuery node to insert right after the truncation point.
+   * options   - An object containing:
+   *             ellipsis  - The ellipsis string to append at the end of the truncation.
+   *             maxHeight - The maximum height for the root node.
+   *
+   * Returns true if truncation happened, false otherwise.
+   */
   function truncateNestedNode($element, $rootNode, $clipNode, options) {
     var element = $element[0];
 
