@@ -14,21 +14,21 @@
     }
   }
 
-  function truncateNearestSibling($element, $rootNode, $after, options) {
+  function truncateNearestSibling($element, $rootNode, $clipNode, options) {
     var $parent = $element.parent();
     var $prevSibling;
 
     $element.remove();
 
-    // Take into account length of $after element previous inserted.
-    var afterLength = $after ? $after.length : 0;
+    // Take into account length of $clipNode element previous inserted.
+    var clipLength = $clipNode ? $clipNode.length : 0;
 
-    if ($parent.contents().length > afterLength) {
+    if ($parent.contents().length > clipLength) {
       // Valid previous sibling element (sharing same parent node) exists,
       // so attempt to truncate it.
 
-      $prevSibling = $parent.contents().eq(-1 - afterLength);
-      return truncateTextContent($prevSibling, $rootNode, $after, options);
+      $prevSibling = $parent.contents().eq(-1 - clipLength);
+      return truncateTextContent($prevSibling, $rootNode, $clipNode, options);
 
     } else {
 
@@ -45,8 +45,8 @@
         setText($prevSibling[0], $prevSibling.text() + options.ellipsis);
         $parent.remove();
 
-        if ($after.length) {
-          $parentSibling.append($after);
+        if ($clipNode.length) {
+          $parentSibling.append($clipNode);
         }
         return true;
       }
@@ -58,15 +58,16 @@
   /* Truncates the text content of a node using binary search.
    * If no valid truncation point is found, attempt to truncate its nearest sibling.
    *
-   * textNode - The node to truncate.
-   * rootNode - The root node (ancestor of the textNode) to measure the truncated height.
+   * $textNode - The jQuery node to truncate.
+   * $rootNode - The jQuery root node (ancestor of the textNode) to measure the truncated height.
+   * $clipNode - The jQuery node to insert right after the truncation point.
    * options  - An object containing:
    *            ellipsis  - The ellipsis string to append at the end of the truncation.
    *            maxHeight - The maximum height for the root node.
    *
    * Returns true if truncation happened, false otherwise.
    */
-  function truncateTextContent($element, $rootNode, $after, options) {
+  function truncateTextContent($element, $rootNode, $clipNode, options) {
     var element = $element[0];
     var original = $element.text();
 
@@ -94,11 +95,11 @@
       setText(element, maxChunk);
       return true;
     } else {
-      return truncateNearestSibling($element, $rootNode, $after, options);
+      return truncateNearestSibling($element, $rootNode, $clipNode, options);
     }
   }
 
-  function truncateNestedNode($element, $rootNode, $after, options) {
+  function truncateNestedNode($element, $rootNode, $clipNode, options) {
     var element = $element[0];
 
     var $children = $element.contents();
@@ -121,24 +122,24 @@
 
       element.appendChild(child);
 
-      if ($after.length) {
+      if ($clipNode.length) {
         if ($.inArray(element.tagName.toLowerCase(), BLOCK_TAGS) >= 0) {
           // Certain elements like <li> should not be appended to.
-          $element.after($after);
+          $element.after($clipNode);
         } else {
-          $element.append($after);
+          $element.append($clipNode);
         }
       }
 
       if ($rootNode.height() > options.maxHeight) {
         if (child.nodeType === 3) { // text node
-          truncated = truncateTextContent($child, $rootNode, $after, options);
+          truncated = truncateTextContent($child, $rootNode, $clipNode, options);
         } else {
-          truncated = truncateNestedNode($child, $rootNode, $after, options);
+          truncated = truncateNestedNode($child, $rootNode, $clipNode, options);
         }
       }
 
-      if (!truncated && $after.length) { $after.remove(); }
+      if (!truncated && $clipNode.length) { $clipNode.remove(); }
 
     }
 
@@ -185,7 +186,7 @@
     this.options = $.extend({}, this._defaults, options);
     this.options.maxHeight = parseInt(this.options.lines, 10) * parseInt(this.options.lineHeight, 10);
 
-    this.$after = $(this.options.showMore, this.$element);
+    this.$clipNode = $(this.options.showMore, this.$element);
 
     this.original = element.innerHTML;
     this.cached = null;
@@ -219,7 +220,7 @@
 
       // Check if already meets height requirement
       if ($wrap.height() > this.options.maxHeight) {
-        truncateNestedNode($wrap, $wrap, this.$after, this.options);
+        truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
         this.cachedHTML = this.element.innerHTML;
       }
 
