@@ -209,7 +209,7 @@
     this.options = $.extend({}, this._defaults, options);
     this.options.maxHeight = parseInt(this.options.lines, 10) * parseInt(this.options.lineHeight, 10);
 
-    this.$clipNode = $(this.options.showMore, this.$element);
+    this.$clipNode = $($.parseHTML(this.options.showMore), this.$element);
 
     this.original = element.innerHTML;
     this.cached = null;
