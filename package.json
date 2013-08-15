@@ -1,7 +1,12 @@
 {
   "name": "truncate.js",
   "version": "0.1.0",
+  "description": "Fast, intelligent Javascript text truncation",
   "main": "truncate.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jeffchan/truncate.js.git"
+  },
   "devDependencies": {
     "mocha-phantomjs": ">= 3.0.0",
     "mocha": "1.9.x",
