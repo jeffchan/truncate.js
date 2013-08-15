@@ -1,7 +1,59 @@
-truncate.js
+Truncate.js
 ====
 
-A fast, intelligent Javascript truncation plugin.
+Fast, intelligent Javascript text truncation
+
+Usage
+-----------
+Truncate.js currently depends on jQuery. There are two ways to use Truncate.js:
+
+1) as a jQuery plugin
+
+    # Initialize and truncate.
+    $('#truncate_me').truncate({
+      lines: 2,
+      lineHeight: 20
+    });
+
+    # Update the HTML and truncate.
+    $('#truncate_me').truncate('update', 'new html to truncate');
+
+    # Undo the truncation.
+    $('#truncate_me').truncate('expand');
+
+    # Redo the truncation (uses cached HTML).
+    $('#truncate_me').truncate('collapse');
+
+2) as a vanilla Javascript object
+
+    # Initialize and truncate.
+    var truncated = new Truncate(document.getElementById('#truncate_me'), {
+      lines: 2,
+      lineHeight: 20
+    });
+
+    # Update the HTML and truncate.
+    truncated.update('new html to truncate');
+
+    # Undo the truncation.
+    truncated.expand();
+
+    # Redo the truncation (uses cached HTML).
+    truncated.collapse();
+
+Options
+-----------
+
+Caveats
+-----------
+Truncate.js does it's best to intelligently truncate through HTML. However,
+there are a few cases where it fails, mostly because the text height cannot
+be easily calculated.
+
+- truncating a node with floating element
+- truncating a node with descendant elements that have padding
+
+See `demo/demo.html` for examples of what works and what doesn't.
 
 Development
 -----------
@@ -35,5 +87,5 @@ To run the test suite:
 License
 -------
 
-Avialable under the MIT license. See LICENSE file for details.
+Available under the MIT license. See LICENSE file for details.
 
