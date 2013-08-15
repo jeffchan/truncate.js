@@ -262,7 +262,7 @@
      * Returns nothing.
      */
     expand: function () {
-      this.element.innerHTML = this.original + this.options.showLess;
+      this.element.innerHTML = this.isTruncated() ? this.original + this.options.showLess : this.original;
     },
 
     /* Public: Collapses the element to the truncated state.

@@ -219,15 +219,30 @@ describe('truncate.js', function () {
   });
 
   describe('.expand()', function () {
-    beforeEach(function () {
-      this.$fixture.html('<div>Members, friends, adversaries, competitors, and colleagues</div>');
-      this.run({ lines: 1, lineHeight: 20 });
+
+    describe('when truncation happened', function () {
+      beforeEach(function () {
+        this.$fixture.html('<div>Members, friends, adversaries, competitors, and colleagues</div>');
+        this.run({ lines: 1, lineHeight: 20 });
+      });
+
+      it('shows the original HTML with show less HTML', function () {
+        assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+        this.$fixture.truncate('expand');
+        assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries, competitors, and colleagues</div><a href=\"#\">Less</a>");
+      });
     });
 
-    it('shows the original HTML', function () {
-      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
-      this.$fixture.truncate('expand');
-      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries, competitors, and colleagues</div><a href=\"#\">Less</a>");
+    describe('when no truncation happened', function () {
+      beforeEach(function () {
+        this.$fixture.html('<div>Members, friends, adversaries, competitors, and colleagues</div>');
+        this.run({ lines: 10, lineHeight: 20 });
+      });
+
+      it('shows the original HTML with show less HTML', function () {
+        this.$fixture.truncate('expand');
+        assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries, competitors, and colleagues</div>");
+      });
     });
   });
 
