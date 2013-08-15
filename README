@@ -50,9 +50,9 @@ Options
   lineHeight  - Required. The text line height.
   lines       - Defaults to 1
   ellipsis    - Text content to add at the truncation point. Defaults to …
-  showMore    - HTML content to add at the truncation point. Useful for a "Show More" button.
+  showMore    - HTML to insert at the truncation point. Useful for a "Show More" button.
                 Defaults to empty string.
-  showLess    - HTML content to add when .expand() is called. Useful for a "Show Less" button.
+  showLess    - HTML to insert when .expand() is called. Useful for a "Show Less" button.
                 Defaults to empty string.
 
 Caveats
