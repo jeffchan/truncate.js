@@ -272,9 +272,13 @@
 
   // Lightweight plugin wrapper preventing multiple instantiations
   $.fn.truncate = function (options) {
+    var args = $.makeArray(arguments).slice(1);
     return this.each(function () {
-      if (!$.data(this, 'jquery-truncate')) {
+      var truncate = $.data(this, 'jquery-truncate');
+      if (!truncate) {
         $.data(this, 'jquery-truncate', new Truncate(this, options));
+      } else if (typeof truncate[options] === 'function') {
+        truncate[options].apply(truncate, args);
       }
     });
   };
