@@ -201,9 +201,9 @@
     this._name = 'truncate';
     this._defaults = {
       lines: 1,
-      ellipsis: '… ',
-      showMore: '<a href="#">More</a>',
-      showLess: '<a href="#">Less</a>'
+      ellipsis: '…',
+      showMore: '',
+      showLess: ''
     };
 
     this.options = $.extend({}, this._defaults, options);
