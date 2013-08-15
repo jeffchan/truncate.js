@@ -1,13 +1,15 @@
 {
-	"name": "truncatejs",
-	"version": "0.0.1",
-	"main": "truncate.js",
-	"scripts": {
-		"test": "`npm bin`/mocha-phantomjs test/truncate-test.html"
-	},
-	"devDependencies": {
-		"mocha-phantomjs": ">= 3.0.0",
-		"mocha": "1.9.x",
-		"chai": ">= 1.7.2"
-	}
+  "name": "truncate.js",
+  "version": "0.1.0",
+  "main": "truncate.js",
+  "devDependencies": {
+    "mocha-phantomjs": ">= 3.0.0",
+    "mocha": "1.9.x",
+    "chai": ">= 1.7.2",
+    "uglify-js": ">= 2.3",
+    "jshint": ">= 2.1"
+  },
+  "author": "Jeff Chan",
+  "license": "MIT",
+  "readmeFilename": "README"
 }
