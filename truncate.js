@@ -1,3 +1,8 @@
+/*  Truncate.js - v0.1.0
+ *  Copyright 2013, Jeff Chan
+ *  Released under the MIT license
+ *  More Information: http://github.com/jeffchan/truncate.js
+ */
 (function (module, $, undefined) {
 
   var BLOCK_TAGS = ['table', 'thead', 'tbody', 'tfoot', 'tr', 'col', 'colgroup', 'object', 'embed', 'param', 'ol', 'ul', 'dl', 'blockquote', 'select', 'optgroup', 'option', 'textarea', 'script', 'style'];
