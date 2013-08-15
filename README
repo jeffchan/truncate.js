@@ -1,7 +1,7 @@
 truncate.js
 ====
 
-A fast, intelligent javascript truncation plugin.
+A fast, intelligent Javascript truncation plugin.
 
 Development
 -----------
@@ -14,16 +14,16 @@ machine. Then run:
 
     $ npm install
 
-To run the linter: (TODO)
+To run the linter:
 
-    $ npm lint
+    $ make lint
 
 Testing
 -------
 
-To run the suite in the browser run:
+To run the test suite:
 
-    $ npm test
+    $ make test
 
 
 ### Libraries
