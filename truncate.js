@@ -234,11 +234,11 @@
       // Wrap the contents in order to ignore container's margin/padding.
       var $wrap = this.$element.wrapInner('<div/>').children();
       $wrap.css({
-        height : 'auto',
-        width  : 'auto',
         border : 'none',
+        margin : 0,
         padding: 0,
-        margin : 0
+        width  : 'auto',
+        height : 'auto'
       });
 
       // Check if already meets height requirement
@@ -248,6 +248,8 @@
 
       // Restore the wrapped contents
       $wrap.replaceWith($wrap.contents());
+
+      // Cache the truncated content
       this.cached = this.element.innerHTML;
     },
 
