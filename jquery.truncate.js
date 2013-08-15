@@ -244,11 +244,11 @@
       // Check if already meets height requirement
       if ($wrap.height() > this.options.maxHeight) {
         truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
-        this.cachedHTML = this.element.innerHTML;
       }
 
       // Restore the wrapped contents
       $wrap.replaceWith($wrap.contents());
+      this.cachedHTML = this.element.innerHTML;
     },
 
     /* Public: Expands the element to show content in full.
