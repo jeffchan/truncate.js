@@ -248,7 +248,7 @@
 
       // Restore the wrapped contents
       $wrap.replaceWith($wrap.contents());
-      this.cachedHTML = this.element.innerHTML;
+      this.cached = this.element.innerHTML;
     },
 
     /* Public: Expands the element to show content in full.
@@ -256,7 +256,7 @@
      * Returns nothing.
      */
     expand: function () {
-      this.element.innerHTML = this.originalHTML + this.options.showLess;
+      this.element.innerHTML = this.original + this.options.showLess;
     },
 
     /* Public: Collapses the element to the truncated state.
@@ -265,7 +265,7 @@
      * Returns nothing.
      */
     collapse: function () {
-      this.element.innerHTML = this.cachedHTML;
+      this.element.innerHTML = this.cached;
     }
 
   };
