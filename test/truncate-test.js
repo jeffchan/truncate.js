@@ -10,7 +10,7 @@ describe('truncate.js', function () {
 
     this.$fixture.html("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
 
-    var defaults = {
+    var testDefaults = {
       lineHeight: 20,
       lines: 1,
       ellipsis: '… ',
@@ -18,9 +18,9 @@ describe('truncate.js', function () {
       showLess: '<a href="#">Less</a>'
     };
 
-    this.run = function (options, useDefaults) {
-      if (useDefaults || typeof useDefaults === 'undefined') {
-        options = $.extend({}, defaults, options);
+    this.run = function (options, useTestDefaults) {
+      if (useTestDefaults || typeof useTestDefaults === 'undefined') {
+        options = $.extend({}, testDefaults, options);
       }
 
       $fixture.truncate(options);
