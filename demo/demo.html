@@ -83,16 +83,6 @@
       <p style="margin: 10px; padding: 0;">Members, friends, adversaries, competitors, and colleagues</p>
     </div>
 
-    <h3 style="color:red">single wrap with padding</h3>
-    <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
-      <p style="margin: 0; padding: 10px;">Members, friends, adversaries, competitors, and colleagues</p>
-    </div>
-
-    <h3 style="color:red">single wrap with padding and margin</h3>
-    <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
-      <p style="margin: 10px; padding: 10px;">Members, friends, adversaries, competitors, and colleagues</p>
-    </div>
-
     <h3>single break tag</h3>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <div>Members, friends, adversarie<br/>s, competitors, and colleagues</div>
@@ -113,11 +103,15 @@
       <ol><li>Members</li><li>Friends<ul><li>Noobs</li><li>Educators</li></li><li>Adversaries</li></ol>
     </div>
 
-    <h3>floated elements</h3>
+    <h3 style="color:red">floated elements</h3>
     <div class="demo" data-truncate-lines="3" style="width: 240px; line-height: 20px;">
       <div style="float: right;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
     </div>
 
+    <h3 style="color:red">single wrap with padding</h3>
+    <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
+      <p style="margin: 0; padding: 10px;">Members, friends, adversaries, competitors, and colleagues</p>
+    </div>
 
     <script type="text/javascript" src="../jquery.truncate.js"></script>
     <script type="text/javascript" src="../jquery.dotdotdot.js"></script>
@@ -129,11 +123,6 @@
           lines: $el.data('truncate-lines'),
           lineHeight: $el.css('line-height')
         });
-        // $el.dotdotdot({
-        //   wrap: 'letter',
-        //   height: parseInt($el.data('truncate-lines')) * parseInt($el.css('line-height')),
-        //   after: '<a href="#">More</a>'
-        // });
       });
     </script>
   </body>
