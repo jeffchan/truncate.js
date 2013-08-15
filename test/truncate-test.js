@@ -207,4 +207,42 @@ describe('truncate.js', function () {
     });
   });
 
+  describe('.update()', function () {
+    beforeEach(function () {
+      this.run({ lines: 1, lineHeight: 20 });
+    });
+
+    it('truncates the new HTML', function () {
+      this.$fixture.truncate('update', '<div>Members, friends, adversaries, competitors, and colleagues</div>');
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+    });
+  });
+
+  describe('.expand()', function () {
+    beforeEach(function () {
+      this.$fixture.html('<div>Members, friends, adversaries, competitors, and colleagues</div>');
+      this.run({ lines: 1, lineHeight: 20 });
+    });
+
+    it('shows the original HTML', function () {
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+      this.$fixture.truncate('expand');
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries, competitors, and colleagues</div><a href=\"#\">Less</a>");
+    });
+  });
+
+  describe('.collapse()', function () {
+    beforeEach(function () {
+      this.$fixture.html('<div>Members, friends, adversaries, competitors, and colleagues</div>');
+      this.run({ lines: 1, lineHeight: 20 });
+      this.$fixture.truncate('expand');
+    });
+
+    it('shows the truncated HTML', function () {
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries, competitors, and colleagues</div><a href=\"#\">Less</a>");
+      this.$fixture.truncate('collapse');
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+    });
+  });
+
 });
