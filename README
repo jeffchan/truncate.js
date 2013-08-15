@@ -41,8 +41,19 @@ Truncate.js currently depends on jQuery. There are two ways to use Truncate.js:
     # Redo the truncation (uses cached HTML).
     truncated.collapse();
 
+    # Check if content is truncated. (not supported as a jQuery plugin)
+    var isTruncated = truncated.isTruncated();
+
 Options
 -----------
+
+  lineHeight  - Required. The text line height.
+  lines       - Defaults to 1
+  ellipsis    - Text content to add at the truncation point. Defaults to …
+  showMore    - HTML content to add at the truncation point. Useful for a "Show More" button.
+                Defaults to empty string.
+  showLess    - HTML content to add when .expand() is called. Useful for a "Show Less" button.
+                Defaults to empty string.
 
 Caveats
 -----------
@@ -52,6 +63,7 @@ be easily calculated.
 
 - truncating a node with floating element
 - truncating a node with descendant elements that have padding
+- truncating a node with text of varying line heights
 
 See `demo/demo.html` for examples of what works and what doesn't.
 
