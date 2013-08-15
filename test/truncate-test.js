@@ -18,8 +18,11 @@ describe('truncate.js', function () {
       showLess: '<a href="#">Less</a>'
     };
 
-    this.run = function (options) {
-      options = $.extend({}, defaults, options);
+    this.run = function (options, useDefaults) {
+      if (useDefaults || typeof useDefaults === 'undefined') {
+        options = $.extend({}, defaults, options);
+      }
+
       $fixture.truncate(options);
     };
 
@@ -36,6 +39,13 @@ describe('truncate.js', function () {
 
     assert.equal(this.fixture.clientHeight, 200);
     assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
+  });
+
+  it('truncate correctly with default options', function () {
+    this.run({ lines: 5, lineHeight: 20 }, false);
+
+    assert.equal(this.fixture.clientHeight, 100);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer too…");
   });
 
   it('truncate correctly when container has no margin or padding', function () {
