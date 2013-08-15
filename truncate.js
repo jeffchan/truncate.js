@@ -181,6 +181,7 @@
    *   var truncated = new Truncate(element, {
    *     lines: 1,
    *     lineHeight: 16,
+   *     ellipsis: '… ',
    *     showMore: '<a class="show-more">Show More</a>',
    *     showLess: '<a class="show-less">Show Less</a>'
    *   });
@@ -241,16 +242,19 @@
         height : 'auto'
       });
 
+      var truncated = false;
       // Check if already meets height requirement
       if ($wrap.height() > this.options.maxHeight) {
-        truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
+        truncated = truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
       }
 
       // Restore the wrapped contents
       $wrap.replaceWith($wrap.contents());
 
       // Cache the truncated content
-      this.cached = this.element.innerHTML;
+      if (truncated) {
+        this.cached = this.element.innerHTML;
+      }
     },
 
     /* Public: Expands the element to show content in full.
@@ -268,6 +272,14 @@
      */
     collapse: function () {
       this.element.innerHTML = this.cached;
+    },
+
+    /* Public: Checks if element's content is truncated.
+     *
+     * Returns true if element's content is truncated. False otherwise.
+     */
+    isTruncated: function () {
+      return this.element.innerHTML === this.cached;
     }
 
   };

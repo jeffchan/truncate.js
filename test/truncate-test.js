@@ -245,4 +245,28 @@ describe('truncate.js', function () {
     });
   });
 
+  describe('.isTruncated()', function () {
+    it('returns false no truncation happened', function () {
+      this.run({ lines: 10 });
+      assert.isFalse(this.$fixture.data('jquery-truncate').isTruncated());
+    });
+
+    it('returns true if truncation happened', function () {
+      this.run({ lines: 5 });
+      assert.isTrue(this.$fixture.data('jquery-truncate').isTruncated());
+    });
+
+    it('returns true if collapsed', function () {
+      this.run({ lines: 5 });
+      this.$fixture.truncate('collapse');
+      assert.isTrue(this.$fixture.data('jquery-truncate').isTruncated());
+    });
+
+    it('returns false if expanded', function () {
+      this.run({ lines: 5 });
+      this.$fixture.truncate('expand');
+      assert.isFalse(this.$fixture.data('jquery-truncate').isTruncated());
+    });
+  });
+
 });
