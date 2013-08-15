@@ -22,4 +22,4 @@ lint:
 
 build: concat minify
 
-.PHONY: pkgdir concat minify build test lint
+.PHONY: build test lint
