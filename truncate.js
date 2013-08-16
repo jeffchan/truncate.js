@@ -271,12 +271,19 @@
     },
 
     /* Public: Collapses the element to the truncated state.
-     * Uses the cached HTML from .update().
+     * Uses the cached HTML from .update() by default.
+     *
+     * retruncate - True to retruncate original HTML, otherwise use cached HTML.
      *
      * Returns nothing.
      */
-    collapse: function () {
-      this.element.innerHTML = this.cached;
+    collapse: function (retruncate) {
+      retruncate = retruncate || false;
+      if (retruncate) {
+        this.update(this.original);
+      } else {
+        this.element.innerHTML = this.cached;
+      }
     },
 
     /* Public: Checks if element's content is truncated.

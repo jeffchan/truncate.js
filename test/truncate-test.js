@@ -264,6 +264,12 @@ describe('truncate.js', function () {
       this.$fixture.truncate('collapse');
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
     });
+
+    it('retruncates if retruncate is true', function () {
+      this.$fixture.html('Ignore me');
+      this.$fixture.truncate('collapse', true);
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+    });
   });
 
   describe('.isTruncated()', function () {
