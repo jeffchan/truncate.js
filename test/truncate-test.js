@@ -216,6 +216,12 @@ describe('truncate.js', function () {
       this.$fixture.truncate('update', '<div>Members, friends, adversaries, competitors, and colleagues</div>');
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
     });
+
+    it('truncates the current HTML if no new HTML specified.', function () {
+      this.$fixture.html("<div>Members, friends, adversaries, competitors, and colleagues</div>");
+      this.$fixture.truncate('update');
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+    });
   });
 
   describe('.expand()', function () {
