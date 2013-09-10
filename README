@@ -42,7 +42,10 @@ Truncate.js currently depends on jQuery. There are two ways to use Truncate.js:
     truncated.collapse();
 
     # Check if content is truncated. (not supported as a jQuery plugin)
-    var isTruncated = truncated.isTruncated();
+    var isTruncated = truncated.isTruncated;
+
+    # Check if content is collapsed. (not supported as a jQuery plugin)
+    var isCollapsed = truncated.isCollapsed
 
 Options
 -----------
