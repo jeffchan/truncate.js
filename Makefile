@@ -1,6 +1,18 @@
 PKGDIR = pkg
 
-default: build
+define USAGE
+Usage instructions:
+    make lint                 runs jshint on the source code
+    make test                 runs the test suite using phantomjs
+    make build                creates a production (minified) build
+    make help                 displays this message
+endef
+export USAGE
+
+default: help
+
+help:
+	@echo "$$USAGE"
 
 pkgdir:
 	@rm -rf $(PKGDIR)
@@ -22,4 +34,4 @@ lint:
 
 build: concat minify
 
-.PHONY: build test lint
+.PHONY: help pkgdir concat minify test lint build
