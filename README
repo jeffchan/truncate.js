@@ -73,6 +73,11 @@ Development
 It's very simple, hack on the code, ensure the lint and tests pass and submit
 a pull request. Rinse and repeat.
 
+There is a Makefile containing useful development tools. The available commands
+can be listed by running:
+
+    $ make
+
 To install the developer packages you'll need node and npm installed on your
 machine. Then run:
 
