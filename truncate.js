@@ -238,9 +238,12 @@
     update: function (html) {
       var wasExpanded = !this.isCollapsed;
 
-      // Update HTML if provided, otherwise default to current inner HTML.
+      // Update HTML if provided, otherwise use the current html and restore
+      // the truncated content to the original if it's currently present.
       if (html) {
         this.original = this.element.innerHTML = html;
+      } else if (this.isCollapsed && this.element.innerHTML === this.cached) {
+        this.element.innerHTML = this.original;
       }
 
       // Wrap the contents in order to ignore container's margin/padding.
@@ -299,7 +302,7 @@
 
       retruncate = retruncate || false;
       if (retruncate) {
-        this.update(this.original);
+        this.update();
       } else {
         this.element.innerHTML = this.cached;
       }

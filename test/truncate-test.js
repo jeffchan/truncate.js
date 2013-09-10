@@ -212,6 +212,12 @@ describe('truncate.js', function () {
       this.run({ lines: 1, lineHeight: 20 });
     });
 
+    it('recalculates the existing html', function () {
+      this.$fixture.width(240);
+      this.$fixture.truncate('update');
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dum… <a href=\"#\">More</a>");
+    });
+
     it('truncates the new HTML', function () {
       this.$fixture.truncate('update', '<div>Members, friends, adversaries, competitors, and colleagues</div>');
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
@@ -266,7 +272,6 @@ describe('truncate.js', function () {
     });
 
     it('retruncates if retruncate is true', function () {
-      this.$fixture.html('Ignore me');
       this.$fixture.truncate('collapse', true);
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
     });
