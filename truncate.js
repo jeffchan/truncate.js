@@ -306,8 +306,6 @@
       } else {
         this.element.innerHTML = this.cached;
       }
-
-      this.element.innerHTML = this.cached;
     }
   };
 
