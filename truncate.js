@@ -217,24 +217,33 @@
 
     this.$clipNode = $($.parseHTML(this.options.showMore), this.$element);
 
-    this.original = element.innerHTML;
-    this.cached = null;
+    this.original = this.cached = element.innerHTML;
+
+    this.isTruncated = false; // True if the original content overflows the container.
+    this.isCollapsed = true;  // True if the container is currently collapsed.
 
     this.update();
   }
 
   Truncate.prototype = {
 
-    /* Public: Updates the inner HTML of the element and re-truncates.
+    /* Public: Updates the inner HTML of the element and re-truncates. Will not
+     * perform an updade if the container is currently expanded, instead it
+     * will wait until the next time .collapse() is called.
      *
-     * newHTML - The new HTML.
+     * html - The new HTML.
      *
      * Returns nothing.
      */
     update: function (html) {
-      // Update HTML if provided, otherwise default to current inner HTML.
+      var wasExpanded = !this.isCollapsed;
+
+      // Update HTML if provided, otherwise use the current html and restore
+      // the truncated content to the original if it's currently present.
       if (html) {
         this.original = this.element.innerHTML = html;
+      } else if (this.isCollapsed && this.element.innerHTML === this.cached) {
+        this.element.innerHTML = this.original;
       }
 
       // Wrap the contents in order to ignore container's margin/padding.
@@ -247,18 +256,24 @@
         height : 'auto'
       });
 
-      var truncated = false;
+      this.isTruncated = false;
       // Check if already meets height requirement
       if ($wrap.height() > this.options.maxHeight) {
-        truncated = truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
+        this.isTruncated = truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
+      } else {
+        this.isCollapsed = false;
       }
 
       // Restore the wrapped contents
       $wrap.replaceWith($wrap.contents());
 
       // Cache the truncated content
-      if (truncated) {
-        this.cached = this.element.innerHTML;
+      this.cached = this.element.innerHTML;
+
+      // If the container was expanded when .update() was called then restore
+      // it to it's previous state.
+      if (wasExpanded) {
+        this.element.innerHTML = this.original;
       }
     },
 
@@ -267,7 +282,10 @@
      * Returns nothing.
      */
     expand: function () {
-      this.element.innerHTML = this.isTruncated() ? this.original + this.options.showLess : this.original;
+      if (!this.isCollapsed) { return; }
+
+      this.isCollapsed = false;
+      this.element.innerHTML = this.isTruncated ? this.original + this.options.showLess : this.original;
     },
 
     /* Public: Collapses the element to the truncated state.
@@ -278,22 +296,17 @@
      * Returns nothing.
      */
     collapse: function (retruncate) {
+      if (this.isCollapsed) { return; }
+
+      this.isCollapsed = true;
+
       retruncate = retruncate || false;
       if (retruncate) {
-        this.update(this.original);
+        this.update();
       } else {
         this.element.innerHTML = this.cached;
       }
-    },
-
-    /* Public: Checks if element's content is truncated.
-     *
-     * Returns true if element's content is truncated. False otherwise.
-     */
-    isTruncated: function () {
-      return this.element.innerHTML === this.cached;
     }
-
   };
 
   // Lightweight plugin wrapper preventing multiple instantiations

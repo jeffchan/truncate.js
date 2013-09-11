@@ -212,6 +212,12 @@ describe('truncate.js', function () {
       this.run({ lines: 1, lineHeight: 20 });
     });
 
+    it('recalculates the existing html', function () {
+      this.$fixture.width(240);
+      this.$fixture.truncate('update');
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dum… <a href=\"#\">More</a>");
+    });
+
     it('truncates the new HTML', function () {
       this.$fixture.truncate('update', '<div>Members, friends, adversaries, competitors, and colleagues</div>');
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
@@ -266,34 +272,42 @@ describe('truncate.js', function () {
     });
 
     it('retruncates if retruncate is true', function () {
-      this.$fixture.html('Ignore me');
       this.$fixture.truncate('collapse', true);
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
     });
   });
 
-  describe('.isTruncated()', function () {
-    it('returns false no truncation happened', function () {
+  describe('.isTruncated', function () {
+    it('is false no truncation happened', function () {
       this.run({ lines: 10 });
-      assert.isFalse(this.$fixture.data('jquery-truncate').isTruncated());
+      assert.isFalse(this.$fixture.data('jquery-truncate').isTruncated);
     });
 
-    it('returns true if truncation happened', function () {
+    it('is true if truncation happened', function () {
       this.run({ lines: 5 });
-      assert.isTrue(this.$fixture.data('jquery-truncate').isTruncated());
-    });
-
-    it('returns true if collapsed', function () {
-      this.run({ lines: 5 });
-      this.$fixture.truncate('collapse');
-      assert.isTrue(this.$fixture.data('jquery-truncate').isTruncated());
-    });
-
-    it('returns false if expanded', function () {
-      this.run({ lines: 5 });
-      this.$fixture.truncate('expand');
-      assert.isFalse(this.$fixture.data('jquery-truncate').isTruncated());
+      assert.isTrue(this.$fixture.data('jquery-truncate').isTruncated);
     });
   });
 
+  describe('.isCollapsed', function () {
+    it('is true if collapsed', function () {
+      this.run({ lines: 5 });
+      this.$fixture.truncate('collapse');
+      assert.isTrue(this.$fixture.data('jquery-truncate').isCollapsed);
+    });
+
+    it('is false if expanded', function () {
+      this.run({ lines: 5 });
+      this.$fixture.truncate('expand');
+      assert.isFalse(this.$fixture.data('jquery-truncate').isCollapsed);
+    });
+
+    it('is false if update is no longer collapsed', function () {
+      this.run({ lines: 5 });
+      assert.isTrue(this.$fixture.data('jquery-truncate').isCollapsed);
+
+      this.$fixture.truncate('update', 'this is short');
+      assert.isFalse(this.$fixture.data('jquery-truncate').isCollapsed);
+    });
+  });
 });
