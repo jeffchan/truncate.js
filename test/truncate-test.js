@@ -87,6 +87,13 @@ describe('truncate.js', function () {
     assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin… <a href=\"#\">More</a>");
   });
 
+  it('truncate correctly based on specified max height', function () {
+    this.run({ maxHeight: 100}, false)
+
+    assert.equal(this.fixture.clientHeight, 100);
+    assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer too…");
+  });
+
   describe('when box sizing is border-box', function () {
     beforeEach(function () {
       this.$fixture.css('box-sizing', 'border-box');
