@@ -8,11 +8,11 @@
     "url": "git://github.com/jeffchan/truncate.js.git"
   },
   "devDependencies": {
-    "mocha-phantomjs": ">= 3.0.0",
-    "mocha": "1.9.x",
-    "chai": ">= 1.7.2",
-    "uglify-js": ">= 2.3",
-    "jshint": ">= 2.1"
+    "mocha-phantomjs": "^3.6.0",
+    "mocha": "^2.2.5",
+    "chai": "^3.2.0",
+    "uglify-js": "^2.4.24",
+    "jshint": "^2.8.0"
   },
   "author": "Jeff Chan",
   "license": "MIT",
