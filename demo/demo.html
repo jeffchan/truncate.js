@@ -1,127 +1,181 @@
 <html>
   <head>
     <title>truncate.js demo</title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <script type="text/javascript" src="../vendor/jquery.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
 
     <style type="text/css">
-      .demo { border: 1px solid #ccc; }
+      .demo {
+        border: 1px solid #ccc;
+      }
     </style>
   </head>
   <body>
-    <h3>No spill</h3>
+    <h1>Truncate.js</h1>
+    <h2>No spill</h2>
     <div class="demo" data-truncate-lines="10" style="width: 250px; line-height: 20px;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>No margin and padding</h3>
+    <h2>No margin and padding</h2>
     <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>With padding. No margin.</h3>
+    <h2>With padding. No margin.</h2>
     <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; padding: 20px;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>With padding. With margin.</h3>
+    <h2>With padding. With margin.</h2>
     <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; padding: 20px; margin: 20px;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>With padding. With thick borders.</h3>
-    <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; padding: 20px; margin: 20px; border-width: 10px;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    <h2>With padding. With thick borders.</h2>
+    <div class="demo" data-truncate-lines="5"
+         style="width: 250px; line-height: 20px; padding: 20px; margin: 20px; border-width: 10px;">
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>No margin and padding (border box)</h3>
+    <h2>No margin and padding (border box)</h2>
     <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; box-sizing: border-box;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>With padding. No margin. (border box)</h3>
-    <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; padding: 20px; box-sizing: border-box;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    <h2>With padding. No margin. (border box)</h2>
+    <div class="demo" data-truncate-lines="5"
+         style="width: 250px; line-height: 20px; padding: 20px; box-sizing: border-box;">
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>With padding. With margin. (border box)</h3>
-    <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; padding: 20px; margin: 20px; box-sizing: border-box;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    <h2>With padding. With margin. (border box)</h2>
+    <div class="demo" data-truncate-lines="5"
+         style="width: 250px; line-height: 20px; padding: 20px; margin: 20px; box-sizing: border-box;">
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <h3>With padding. With thick borders. (border box)</h3>
-    <div class="demo" data-truncate-lines="5" style="width: 250px; line-height: 20px; padding: 20px; margin: 20px; border-width: 10px; box-sizing: border-box;">
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    <h2>With padding. With thick borders. (border box)</h2>
+    <div class="demo" data-truncate-lines="5"
+         style="width: 250px; line-height: 20px; padding: 20px; margin: 20px; border-width: 10px; box-sizing: border-box;">
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+      remaining essentially unchanged.
     </div>
 
-    <hr />
+    <hr/>
 
     <h1>with nested elements</h1>
 
-    <h3>Ignore comment nodes</h3>
+    <h2>Ignore comment nodes</h2>
     <div class="demo" data-truncate-lines="2" style="width: 240px; line-height: 20px;">
       Lorem Ipsum is simply dummy texts of the printing and typesettin<!--- test -->g industry.
     </div>
 
-    <h3>single block wrap</h3>
+    <h2>single block wrap</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <div>Members, friends, adversaries, competitors, and colleagues</div>
     </div>
 
-    <h3>double block wrap</h3>
+    <h2>double block wrap</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
-      <div><div>Members, friends, adversaries, competitors, and colleagues</div></div>
+      <div>
+        <div>Members, friends, adversaries, competitors, and colleagues</div>
+      </div>
     </div>
 
-    <h3>double inline wrap</h3>
+    <h2>double inline wrap</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <span><span>Members, friends, adversaries, competitors, and colleagues</span></span>
     </div>
 
-    <h3>single wrap with margin</h3>
+    <h2>single wrap with margin</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <p style="margin: 10px; padding: 0;">Members, friends, adversaries, competitors, and colleagues</p>
     </div>
 
-    <h3>single break tag</h3>
+    <h2>single break tag</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <div>Members, friends, adversarie<br/>s, competitors, and colleagues</div>
     </div>
 
-    <h3>double break tags</h3>
+    <h2>double break tags</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <div>Members, friends, adversarie<br/><br/>s, competitors, and colleagues</div>
     </div>
 
-    <h3>lists</h3>
+    <h2>lists</h2>
     <div class="demo" data-truncate-lines="2" style="width: 240px; line-height: 20px;">
-      <ul><li>Members</li><li>Friends</li><li>Adversaries</li></ul>
+      <ul>
+        <li>Members</li>
+        <li>Friends</li>
+        <li>Adversaries</li>
+      </ul>
     </div>
 
-    <h3>nested lists</h3>
+    <h2>nested lists</h2>
     <div class="demo" data-truncate-lines="3" style="width: 240px; line-height: 20px;">
-      <ol><li>Members</li><li>Friends<ul><li>Noobs</li><li>Educators</li></li><li>Adversaries</li></ol>
+      <ol>
+        <li>Members</li>
+        <li>Friends
+          <ul>
+            <li>Noobs</li>
+            <li>Educators</li>
+            <li>Adversaries</li>
+          </ul>
+      </ol>
     </div>
 
-    <h3 style="color:red">floated elements</h3>
+    <h2 style="color:red">floated elements</h2>
     <div class="demo" data-truncate-lines="3" style="width: 240px; line-height: 20px;">
-      <div style="float: right;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</div>
+      <div style="float: right;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+        has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+        electronic typesetting, remaining essentially unchanged.
+      </div>
     </div>
 
-    <h3 style="color:red">single wrap with padding</h3>
+    <h2 style="color:red">single wrap with padding</h2>
     <div class="demo" data-truncate-lines="1" style="width: 240px; line-height: 20px;">
       <p style="margin: 0; padding: 10px;">Members, friends, adversaries, competitors, and colleagues</p>
     </div>
 
     <script type="text/javascript" src="../truncate.js"></script>
     <script type="text/javascript">
-      $('.demo').each(function () {
+      $('.demo').each(function() {
         var $el = $(this);
-
+        console.time('truncate performance');
         $el.truncate({
           lines: $el.data('truncate-lines'),
           lineHeight: $el.css('line-height')
         });
+
+        console.timeEnd('truncate performance');
       });
     </script>
   </body>
