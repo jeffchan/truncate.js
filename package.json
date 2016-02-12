@@ -1,20 +1,29 @@
 {
   "name": "truncate.js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Fast, intelligent Javascript text truncation",
   "main": "truncate.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/jeffchan/truncate.js.git"
   },
+  "scripts": {
+    "lint": "gulp lint",
+    "test": "mocha-phantomjs test/truncate-test.html",
+    "build": "gulp build"
+  },
   "devDependencies": {
-    "mocha-phantomjs": "^3.6.0",
-    "mocha": "^2.2.5",
     "chai": "^3.2.0",
-    "uglify-js": "^2.4.24",
-    "jshint": "^2.8.0"
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.2",
+    "jquery": "^2.2.0",
+    "jshint": "^2.9.1",
+    "mocha": "^2.4.5",
+    "mocha-phantomjs": "^4.0.0",
+    "uglify-js": "^2.4.24"
   },
   "author": "Jeff Chan",
-  "license": "MIT",
-  "readmeFilename": "README"
+  "license": "MIT"
 }
