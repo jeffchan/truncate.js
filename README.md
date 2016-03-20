@@ -48,7 +48,7 @@ Truncate.js currently depends on jQuery. There are two ways to use Truncate.js:
 
 ## Options
 
-- `lineHeight`: **Required**. The text line height.
+- `lineHeight`: **Required**. The text line height (in px).
 - `lines`: The number of line maximum. _default: 1_
 - `ellipsis`: Text content to add at the truncation point. _default: …_
 - `showMore`: HTML to insert at the truncation point. Useful for a "Show More" button. _default: ""_

@@ -22,7 +22,7 @@
    * $clipNode - The jQuery node to insert right after the truncation point.
    * options   - An object containing:
    *             ellipsis  - The ellipsis string to append at the end of the truncation.
-   *             maxHeight - The maximum height for the root node.
+   *             maxHeight - The maximum height for the root node (in px).
    *
    * Returns true if truncation happened, false otherwise.
    */
@@ -75,7 +75,7 @@
    * $clipNode - The jQuery node to insert right after the truncation point.
    * options   - An object containing:
    *             ellipsis  - The ellipsis string to append at the end of the truncation.
-   *             maxHeight - The maximum height for the root node.
+   *             maxHeight - The maximum height for the root node (in px).
    *
    * Returns true if truncation happened, false otherwise.
    */
@@ -118,7 +118,7 @@
    * $clipNode - The jQuery node to insert right after the truncation point.
    * options   - An object containing:
    *             ellipsis  - The ellipsis string to append at the end of the truncation.
-   *             maxHeight - The maximum height for the root node.
+   *             maxHeight - The maximum height for the root node (in px).
    *
    * Returns true if truncation happened, false otherwise.
    */
