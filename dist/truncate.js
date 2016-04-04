@@ -1,8 +1,3 @@
-/*  Truncate.js - v0.1.0
- *  Copyright 2013, Jeff Chan
- *  Released under the MIT license
- *  More Information: http://github.com/jeffchan/truncate.js
- */
 (function (module, $, undefined) {
 
   var BLOCK_TAGS = ['table', 'thead', 'tbody', 'tfoot', 'tr', 'col', 'colgroup', 'object', 'embed', 'param', 'ol', 'ul', 'dl', 'blockquote', 'select', 'optgroup', 'option', 'textarea', 'script', 'style'];
@@ -27,7 +22,8 @@
    * $clipNode - The jQuery node to insert right after the truncation point.
    * options   - An object containing:
    *             ellipsis  - The ellipsis string to append at the end of the truncation.
-   *             maxHeight - The maximum height for the root node.
+   *             maxHeight - The maximum height for the root node (in px).
+   *             position  - The position of the truncation ("start", "middle", "end").
    *
    * Returns true if truncation happened, false otherwise.
    */
@@ -72,19 +68,43 @@
     return false;
   }
 
-  /* Truncates the text content of a node using binary search.
-   * If no valid truncation point is found, attempt to truncate its nearest sibling.
-   *
-   * $textNode - The jQuery node to truncate.
-   * $rootNode - The jQuery root node to measure the truncated height.
-   * $clipNode - The jQuery node to insert right after the truncation point.
-   * options   - An object containing:
-   *             ellipsis  - The ellipsis string to append at the end of the truncation.
-   *             maxHeight - The maximum height for the root node.
-   *
-   * Returns true if truncation happened, false otherwise.
-   */
-  function truncateTextContent($element, $rootNode, $clipNode, options) { // jshint ignore:line
+  /* Truncates, at the beginning, the text content of a node using binary search */
+  function truncateTextStart($element, $rootNode, $clipNode, options) {
+    var element = $element[0];
+    var original = $element.text();
+
+    var maxChunk = '';
+    var mid, chunk;
+    var low = 0;
+    var high = original.length;
+
+    while (low <= high) {
+      mid = low + ((high - low) >> 1); // Integer division
+
+      chunk = options.ellipsis + $.trim(original.substr(mid - 1, original.length));
+      setText(element, chunk);
+
+      if ($rootNode.height() > options.maxHeight) {
+        // too big, reduce the chunk
+        low = mid + 1;
+      }
+      else {
+        // chunk valid, try to get a bigger chunk
+        high = mid - 1;
+        maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
+      }
+    }
+
+    if (maxChunk.length > 0) {
+      setText(element, maxChunk);
+      return true;
+    } else {
+      return truncateNearestSibling($element, $rootNode, $clipNode, options);
+    }
+  }
+
+  /* Truncates, at the end, the text content of a node using binary search */
+  function truncateTextEnd($element, $rootNode, $clipNode, options) {
     var element = $element[0];
     var original = $element.text();
 
@@ -101,8 +121,10 @@
       setText(element, chunk);
 
       if ($rootNode.height() > options.maxHeight) {
+        // too big, reduce the chunk
         high = mid - 1;
       } else {
+        // chunk valid, try to get a bigger chunk
         low = mid + 1;
         maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
       }
@@ -116,18 +138,120 @@
     }
   }
 
-  /* Recursively truncates a nested node. Traverses the children node tree in-rder.
+  /* Truncates, at the middle, the text content of a node using binary search */
+  function truncateTextMiddle($element, $rootNode, $clipNode, options) {
+    var element = $element[0];
+    var original = $element.text();
+
+    var maxChunk = '';
+    var low = 0;
+    var len = original.length;
+    var high = len >> 1;
+    var mid, chunk;
+
+    while (low <= high) {
+      mid = low + ((high - low) >> 1); // Integer division
+
+      chunk = $.trim(original.substr(0, mid)) + options.ellipsis + original.substr(len - mid, len - mid);
+      setText(element, chunk);
+
+      if ($rootNode.height() > options.maxHeight) {
+        // too big, reduce the chunk
+        high = mid - 1;
+      }
+      else {
+        // chunk valid, try to get a bigger chunk
+        low = mid + 1;
+
+        maxChunk = maxChunk.length > chunk.length ? maxChunk : chunk;
+      }
+    }
+
+    if (maxChunk.length > 0) {
+      setText(element, maxChunk);
+      return true;
+    } else {
+      return truncateNearestSibling($element, $rootNode, $clipNode, options);
+    }
+  }
+
+  /* Truncates the text content of a node using binary search.
+   * If no valid truncation point is found, attempt to truncate its nearest sibling.
    *
-   * $element  - The jQuery nested node to truncate.
+   * $textNode - The jQuery node to truncate.
    * $rootNode - The jQuery root node to measure the truncated height.
    * $clipNode - The jQuery node to insert right after the truncation point.
    * options   - An object containing:
    *             ellipsis  - The ellipsis string to append at the end of the truncation.
-   *             maxHeight - The maximum height for the root node.
+   *             maxHeight - The maximum height for the root node (in px).
+   *             position  - The position of the truncation ("start", "middle", "end").
    *
    * Returns true if truncation happened, false otherwise.
    */
-  function truncateNestedNode($element, $rootNode, $clipNode, options) {
+  function truncateTextContent($element, $rootNode, $clipNode, options) { // jshint ignore:line
+    if (options.position === "end") {
+      return truncateTextEnd($element, $rootNode, $clipNode, options);
+    }
+    else if (options.position === "start") {
+      return truncateTextStart($element, $rootNode, $clipNode, options);
+    }
+    else {
+      return truncateTextMiddle($element, $rootNode, $clipNode, options);
+    }
+  }
+
+  /* Recursively truncates a nested node. Traverses the children node tree in reverse order. */
+  function truncateNestedNodeStart($element, $rootNode, $clipNode, options) {
+    var element = $element[0];
+
+    var $children = $element.contents();
+    var $child, child;
+
+    var length = $children.length;
+    var index = length -1;
+    var truncated = false;
+
+    $element.empty();
+
+    for (; index >= 0 && !truncated; index--) {
+
+      $child = $children.eq(index);
+      child = $child[0];
+
+      if (child.nodeType === 8) { // comment node
+        continue;
+      }
+
+      element.insertBefore(child, element.firstChild);
+
+      if ($clipNode.length) {
+        if ($.inArray(element.tagName.toLowerCase(), BLOCK_TAGS) >= 0) {
+          // Certain elements like <li> should not be appended to.
+          $element.after($clipNode);
+        } else {
+          $element.append($clipNode);
+        }
+      }
+
+      if ($rootNode.height() > options.maxHeight) {
+        if (child.nodeType === 3) { // text node
+          truncated = truncateTextContent($child, $rootNode, $clipNode, options);
+        } else {
+          truncated = truncateNestedNode($child, $rootNode, $clipNode, options);
+        }
+      }
+
+      if (!truncated && $clipNode.length) {
+        $clipNode.remove();
+      }
+
+    }
+
+    return truncated;
+  }
+
+  /* Recursively truncates a nested node. Traverses the children node tree in-order. */
+  function truncateNestedNodeEnd($element, $rootNode, $clipNode, options) {
     var element = $element[0];
 
     var $children = $element.contents();
@@ -167,11 +291,38 @@
         }
       }
 
-      if (!truncated && $clipNode.length) { $clipNode.remove(); }
+      if (!truncated && $clipNode.length) {
+        $clipNode.remove();
+      }
 
     }
 
     return truncated;
+  }
+
+  /* Recursively truncates a nested node.
+   *
+   * $element  - The jQuery nested node to truncate.
+   * $rootNode - The jQuery root node to measure the truncated height.
+   * $clipNode - The jQuery node to insert right after the truncation point.
+   * options   - An object containing:
+   *             ellipsis  - The ellipsis string to append at the end of the truncation.
+   *             maxHeight - The maximum height for the root node (in px).
+   *             position  - The position of the truncation ("start", "middle", "end").
+   *
+   * Returns true if truncation happened, false otherwise.
+   */
+  function truncateNestedNode($element, $rootNode, $clipNode, options) { // jshint ignore:line
+    if (options.position === "end") {
+      return truncateNestedNodeEnd($element, $rootNode, $clipNode, options);
+    }
+    else if (options.position === "start") {
+      return truncateNestedNodeStart($element, $rootNode, $clipNode, options);
+    }
+    else {
+      // TODO: Truncate middle for nested = HARDCORE
+      return truncateNestedNodeEnd($element, $rootNode, $clipNode, options);
+    }
   }
 
   /* Public: Creates an instance of Truncate.
@@ -188,7 +339,8 @@
    *     lineHeight: 16,
    *     ellipsis: '… ',
    *     showMore: '<a class="show-more">Show More</a>',
-   *     showLess: '<a class="show-less">Show Less</a>'
+   *     showLess: '<a class="show-less">Show Less</a>',
+   *     position: "start"
    *   });
    *
    *   // Update HTML
@@ -209,13 +361,18 @@
       lines: 1,
       ellipsis: '…',
       showMore: '',
-      showLess: ''
+      showLess: '',
+      position: 'end'
     };
 
     this.options = $.extend({}, this._defaults, options);
 
     if (this.options.maxHeight === undefined) {
       this.options.maxHeight = parseInt(this.options.lines, 10) * parseInt(this.options.lineHeight, 10);
+    }
+
+    if (this.options.position !== 'start' && this.options.position !== 'middle' && this.options.position !== 'end') {
+      this.options.position = 'end';
     }
 
     this.$clipNode = $($.parseHTML(this.options.showMore), this.$element);
@@ -252,11 +409,11 @@
       // Wrap the contents in order to ignore container's margin/padding.
       var $wrap = this.$element.wrapInner('<div/>').children();
       $wrap.css({
-        border : 'none',
-        margin : 0,
+        border: 'none',
+        margin: 0,
         padding: 0,
-        width  : 'auto',
-        height : 'auto'
+        width: 'auto',
+        height: 'auto'
       });
 
       this.isTruncated = false;
@@ -285,7 +442,9 @@
      * Returns nothing.
      */
     expand: function () {
-      if (!this.isCollapsed) { return; }
+      if (!this.isCollapsed) {
+        return;
+      }
 
       this.isCollapsed = false;
       this.element.innerHTML = this.isTruncated ? this.original + this.options.showLess : this.original;
@@ -299,7 +458,9 @@
      * Returns nothing.
      */
     collapse: function (retruncate) {
-      if (this.isCollapsed) { return; }
+      if (this.isCollapsed) {
+        return;
+      }
 
       this.isCollapsed = true;
 
