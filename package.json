@@ -2,6 +2,11 @@
   "name": "truncate.js",
   "version": "1.0.0",
   "description": "Fast, intelligent Javascript text truncation",
+  "author": "Jeff Chan",
+  "contributors": [{
+    "name": "Tuizi",
+    "email": "fabien.rogeret@gmail.com"
+  }],
   "main": "truncate.js",
   "repository": {
     "type": "git",
@@ -9,7 +14,7 @@
   },
   "scripts": {
     "lint": "gulp lint",
-    "test": "mocha-phantomjs test/truncate-test.html",
+    "test": "mocha-phantomjs test/phantomjs/truncate-test.html",
     "build": "gulp build"
   },
   "devDependencies": {
@@ -24,6 +29,10 @@
     "mocha-phantomjs": "^4.0.0",
     "uglify-js": "^2.4.24"
   },
-  "author": "Jeff Chan",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "jquery",
+    "ellipsis",
+    "truncate"
+  ]
 }

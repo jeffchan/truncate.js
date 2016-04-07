@@ -53,6 +53,7 @@ Truncate.js currently depends on jQuery. There are two ways to use Truncate.js:
 - `ellipsis`: Text content to add at the truncation point. _default: …_
 - `showMore`: HTML to insert at the truncation point. Useful for a "Show More" button. _default: ""_
 - `showLess`: HTML to insert when .expand() is called. Useful for a "Show Less" button. _default: ""_
+- `position`: Position of the truncation. Possible values: `start`, `middle`, `end`. _default: "end"_
 
 ----
 
@@ -65,6 +66,8 @@ be easily calculated.
 - truncating a node with floating element
 - truncating a node with descendant elements that have padding
 - truncating a node with text of varying line heights
+
+The truncate position is also very difficult when set to `middle` and with nested elements.
 
 See `demo/demo.html` for examples of what works and what doesn't.
 
