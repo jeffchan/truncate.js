@@ -41,6 +41,33 @@
 <hr>
 
 <section>
+  <h2>Line height</h2>
+  <h3>With line-height specified</h3>
+  <div class="demo" data-truncate-lines="5" data-truncate-position="end" style="width: 250px; line-height: 20px;">
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+    type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+    remaining essentially unchanged.
+  </div>
+  <h3>line-height auto detect (no css line height specified)</h3>
+  <div class="demo" data-truncate-lines="5" data-truncate-position="end" data-auto-line-height=true style="width: 250px;">
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+    type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+    remaining essentially unchanged.
+  </div>
+  <h3>line-height auto detect (css line height specified)</h3>
+  <div class="demo" data-truncate-lines="5" data-truncate-position="end" data-auto-line-height=true style="width: 250px; line-height: 25px;">
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+    standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
+    type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+    remaining essentially unchanged.
+  </div>
+</section>
+
+<hr>
+
+<section>
   <h2>Box</h2>
   <h3>No spill</h3>
   <div class="demo" data-truncate-lines="10" style="width: 250px; line-height: 20px;">
@@ -285,11 +312,17 @@
   $('.demo').each(function () {
     var $el = $(this);
     console.time('truncate performance');
-    $el.truncate({
+
+    var config = {
       lines: $el.data('truncate-lines'),
-      position: $el.data('truncate-position'),
-      lineHeight: $el.css('line-height')
-    });
+      position: $el.data('truncate-position')
+    };
+
+    if(!$el.data("auto-line-height")) {
+      config.lineHeight = $el.css('line-height');
+    }
+
+    $el.truncate(config);
 
     console.timeEnd('truncate performance');
   });

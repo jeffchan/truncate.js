@@ -340,4 +340,13 @@ describe('truncate.js', function () {
       assert.equal(this.$fixture.html(), "Lorem Ipsum is si…tially unchanged.");
     });
   });
+
+  describe('line-height', function () {
+    it('should lineHeight configuration property be optional', function () {
+      this.run({lines: 1}, false);
+
+      assert.equal(this.fixture.clientHeight, 20);
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text…");
+    });
+  });
 });

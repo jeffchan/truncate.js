@@ -362,10 +362,22 @@
       ellipsis: '…',
       showMore: '',
       showLess: '',
-      position: 'end'
+      position: 'end',
+      lineHeight: 'auto'
     };
 
     this.options = $.extend({}, this._defaults, options);
+
+    if (this.options.lineHeight === 'auto') {
+      var lineHeightCss = this.$element.css('line-height'),
+        lineHeight = 18; // for Normal we return the default value: 18px
+
+      if (lineHeightCss !== "normal") {
+        lineHeight = parseInt(lineHeightCss, 10);
+      }
+
+      this.options.lineHeight = lineHeight;
+    }
 
     if (this.options.maxHeight === undefined) {
       this.options.maxHeight = parseInt(this.options.lines, 10) * parseInt(this.options.lineHeight, 10);
