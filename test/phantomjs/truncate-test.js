@@ -235,6 +235,12 @@ describe('truncate.js', function () {
       this.$fixture.truncate('update');
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
     });
+
+    it('should support empty string', function () {
+      this.$fixture.html("<div>Members, friends, adversaries, competitors, and colleagues</div>");
+      this.$fixture.truncate('update', "");
+      assert.equal(this.$fixture.html(), "");
+    });
   });
 
   describe('.expand()', function () {

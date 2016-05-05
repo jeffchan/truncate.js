@@ -412,7 +412,7 @@
 
       // Update HTML if provided, otherwise use the current html and restore
       // the truncated content to the original if it's currently present.
-      if (html) {
+      if (typeof html !== 'undefined') {
         this.original = this.element.innerHTML = html;
       } else if (this.isCollapsed && this.element.innerHTML === this.cached) {
         this.element.innerHTML = this.original;
