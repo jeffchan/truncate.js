@@ -2,6 +2,17 @@
 
   var BLOCK_TAGS = ['table', 'thead', 'tbody', 'tfoot', 'tr', 'col', 'colgroup', 'object', 'embed', 'param', 'ol', 'ul', 'dl', 'blockquote', 'select', 'optgroup', 'option', 'textarea', 'script', 'style'];
 
+  /* Trim function.
+   * Trim only end of string whitespaces
+   *
+   * text - String to trim
+   *
+   * Returns text without end whitespaces
+   */
+  function trimRight(text) {
+    return text.replace(/\s*$/,"");
+  }
+
   function setText(element, text) {
     if (element.innerText) {
       element.innerText = text;
@@ -81,7 +92,7 @@
     while (low <= high) {
       mid = low + ((high - low) >> 1); // Integer division
 
-      chunk = options.ellipsis + $.trim(original.substr(mid - 1, original.length));
+      chunk = options.ellipsis + trimRight(original.substr(mid - 1, original.length));
       setText(element, chunk);
 
       if ($rootNode.height() > options.maxHeight) {
@@ -117,7 +128,7 @@
     while (low <= high) {
       mid = low + ((high - low) >> 1); // Integer division
 
-      chunk = $.trim(original.substr(0, mid + 1)) + options.ellipsis;
+      chunk = trimRight(original.substr(0, mid + 1)) + options.ellipsis;
       setText(element, chunk);
 
       if ($rootNode.height() > options.maxHeight) {
@@ -152,7 +163,7 @@
     while (low <= high) {
       mid = low + ((high - low) >> 1); // Integer division
 
-      chunk = $.trim(original.substr(0, mid)) + options.ellipsis + original.substr(len - mid, len - mid);
+      chunk = trimRight(original.substr(0, mid)) + options.ellipsis + original.substr(len - mid, len - mid);
       setText(element, chunk);
 
       if ($rootNode.height() > options.maxHeight) {
@@ -425,13 +436,19 @@
         margin: 0,
         padding: 0,
         width: 'auto',
-        height: 'auto'
+        height: 'auto',
+        'word-wrap': 'break-word'
       });
 
       this.isTruncated = false;
       // Check if already meets height requirement
       if ($wrap.height() > this.options.maxHeight) {
         this.isTruncated = truncateNestedNode($wrap, $wrap, this.$clipNode, this.options);
+
+        if(this.isExplicitlyCollapsed) {
+          this.isCollapsed = true;
+          wasExpanded = false;
+        }
       } else {
         this.isCollapsed = false;
       }
@@ -454,12 +471,20 @@
      * Returns nothing.
      */
     expand: function () {
+      var includeShowLess = true;
+
+      if(this.isExplicitlyCollapsed) {
+        this.isExplicitlyCollapsed = false;
+        includeShowLess = false;
+      }
+
       if (!this.isCollapsed) {
         return;
       }
 
       this.isCollapsed = false;
-      this.element.innerHTML = this.isTruncated ? this.original + this.options.showLess : this.original;
+
+      this.element.innerHTML = this.isTruncated ? this.original + (includeShowLess ? this.options.showLess : "") : this.original;
     },
 
     /* Public: Collapses the element to the truncated state.
@@ -470,6 +495,8 @@
      * Returns nothing.
      */
     collapse: function (retruncate) {
+      this.isExplicitlyCollapsed = true;
+      
       if (this.isCollapsed) {
         return;
       }

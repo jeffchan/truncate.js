@@ -48,6 +48,24 @@ describe('truncate.js', function () {
     assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer too…");
   });
 
+  it('truncate correctly word with no space', function () {
+    this.$fixture.html('E83F2E36E5EB4A0CBE92758E5C20BB8A');
+    this.$fixture.css('width', '60px');
+
+    this.run({lines: 1}, false);
+
+    assert.equal(this.$fixture.html(), "E83F2…");
+  });
+
+  it('truncate correctly white space', function () {
+    this.$fixture.html('Some text <a href="/foo">with some link</a> and some more text.');
+    this.$fixture.css('width', '250px');
+
+    this.run({lines: 1}, false);
+
+    assert.equal(this.$fixture.html(), "Some text <a href=\"/foo\">with some link</a> and some…");
+  });
+
   it('truncate correctly when container has no margin or padding', function () {
     this.run({ lines: 5 });
 
@@ -256,6 +274,20 @@ describe('truncate.js', function () {
         this.$fixture.truncate('expand');
         assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries, competitors, and colleagues</div><a href=\"#\">Less</a>");
       });
+
+      it('should be able to expand after multiple update', function () {
+        this.$fixture.truncate('collapse');
+        assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+
+        this.$fixture.truncate('update', '<div>Members.</div>');
+        assert.equal(this.$fixture.html(), "<div>Members.</div>");
+
+        this.$fixture.truncate('update', '<div>Members, friends, adversaries, competitors, and colleagues</div>');
+        assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+
+        this.$fixture.truncate('expand');
+        assert.equal(this.$fixture.html(), '<div>Members, friends, adversaries, competitors, and colleagues</div>');
+      });
     });
 
     describe('when no truncation happened', function () {
@@ -286,6 +318,17 @@ describe('truncate.js', function () {
 
     it('retruncates if retruncate is true', function () {
       this.$fixture.truncate('collapse', true);
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+    });
+
+    it('should keep the collapsed status after multiple update', function () {
+      this.$fixture.truncate('collapse');
+      assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
+
+      this.$fixture.truncate('update', '<div>Members.</div>');
+      assert.equal(this.$fixture.html(), "<div>Members.</div>");
+
+      this.$fixture.truncate('update', '<div>Members, friends, adversaries, competitors, and colleagues</div>');
       assert.equal(this.$fixture.html(), "<div>Members, friends, adversaries,… <a href=\"#\">More</a></div>");
     });
   });
