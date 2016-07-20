@@ -362,6 +362,9 @@
    *
    *   // Redo truncation
    *   truncated.collapse();
+   *
+   *   // Update options
+   *   truncated.config({ lines : 3 });
    */
   function Truncate(element, options) {
     this.element = element;
@@ -377,28 +380,7 @@
       lineHeight: 'auto'
     };
 
-    this.options = $.extend({}, this._defaults, options);
-
-    if (this.options.lineHeight === 'auto') {
-      var lineHeightCss = this.$element.css('line-height'),
-        lineHeight = 18; // for Normal we return the default value: 18px
-
-      if (lineHeightCss !== "normal") {
-        lineHeight = parseInt(lineHeightCss, 10);
-      }
-
-      this.options.lineHeight = lineHeight;
-    }
-
-    if (this.options.maxHeight === undefined) {
-      this.options.maxHeight = parseInt(this.options.lines, 10) * parseInt(this.options.lineHeight, 10);
-    }
-
-    if (this.options.position !== 'start' && this.options.position !== 'middle' && this.options.position !== 'end') {
-      this.options.position = 'end';
-    }
-
-    this.$clipNode = $($.parseHTML(this.options.showMore), this.$element);
+    this.config(options);
 
     this.original = this.cached = element.innerHTML;
 
@@ -409,6 +391,42 @@
   }
 
   Truncate.prototype = {
+
+    /* Public: Replaces the existing options field by the new values.
+     *
+     * options - The new options object.
+     *
+     * Returns nothing.
+     */
+    config: function (options) {
+      this.options = $.extend({}, this._defaults, options);
+
+      if (this.options.lineHeight === 'auto') {
+        var lineHeightCss = this.$element.css('line-height'),
+          lineHeight = 18; // for Normal we return the default value: 18px
+
+        if (lineHeightCss !== "normal") {
+          lineHeight = parseInt(lineHeightCss, 10);
+        }
+
+        this.options.lineHeight = lineHeight;
+      }
+
+      if (this.options.maxHeight === undefined) {
+        this.options.maxHeight = parseInt(this.options.lines, 10) * parseInt(this.options.lineHeight, 10);
+      }
+
+      if (this.options.position !== 'start' && this.options.position !== 'middle' && this.options.position !== 'end') {
+        this.options.position = 'end';
+      }
+
+      this.$clipNode = $($.parseHTML(this.options.showMore), this.$element);
+
+      // Forced update if plugin already initialized
+      if (this.original) {
+        this.update();
+      }
+    },
 
     /* Public: Updates the inner HTML of the element and re-truncates. Will not
      * perform an updade if the container is currently expanded, instead it

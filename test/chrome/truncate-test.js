@@ -398,4 +398,33 @@ describe('truncate.js', function () {
       assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text…");
     });
   });
+
+  describe('set-options', function () {
+    it('should updates options field', function () {
+      this.run({lines: 1}, false);
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text…");
+
+      this.$fixture.truncate('config', {lines: 2});
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem");
+    });
+
+    it('should keep the collapsed after update options', function () {
+      this.run({lines: 1}, false);
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text…");
+
+      this.$fixture.truncate('config', {lines: 2});
+      assert.isTrue(this.$fixture.data('jquery-truncate').isCollapsed);
+    });
+
+    it('should expand', function () {
+      this.run({lines: 1}, false);
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text…");
+
+      this.$fixture.truncate('config', {lines: 2});
+
+      this.$fixture.truncate('expand');
+      assert.isFalse(this.$fixture.data('jquery-truncate').isCollapsed);
+      assert.equal(this.$fixture.html(), "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.");
+    });
+  });
 });
