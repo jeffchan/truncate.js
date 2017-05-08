@@ -7,48 +7,50 @@ Fast, intelligent Javascript text truncation
 Truncate.js currently depends on jQuery. There are two ways to use Truncate.js:
 
 ### As a jQuery plugin
+```js
+// Initialize and truncate.
+$('#truncate_me').truncate({
+  lines: 2
+});
 
-    // Initialize and truncate.
-    $('#truncate_me').truncate({
-      lines: 2
-    });
+// Update the HTML and truncate.
+$('#truncate_me').truncate('update', 'new html to truncate');
 
-    // Update the HTML and truncate.
-    $('#truncate_me').truncate('update', 'new html to truncate');
+// Undo the truncation.
+$('#truncate_me').truncate('expand');
 
-    // Undo the truncation.
-    $('#truncate_me').truncate('expand');
+// Redo the truncation (uses cached HTML).
+$('#truncate_me').truncate('collapse');
 
-    // Redo the truncation (uses cached HTML).
-    $('#truncate_me').truncate('collapse');
-
-    // Update options.
-    $('#truncate_me').truncate('config', { lines : 3 });
+// Update options.
+$('#truncate_me').truncate('config', { lines : 3 });
+```
 
 ### As a vanilla Javascript object
+```js
+// Initialize and truncate.
+var truncated = new Truncate(document.getElementById('#truncate_me'), {
+  lines: 2
+});
 
-    // Initialize and truncate.
-    var truncated = new Truncate(document.getElementById('#truncate_me'), {
-      lines: 2
-    });
+// Update the HTML and truncate.
+truncated.update('new html to truncate');
 
-    // Update the HTML and truncate.
-    truncated.update('new html to truncate');
+// Undo the truncation.
+truncated.expand();
 
-    // Undo the truncation.
-    truncated.expand();
+// Redo the truncation (uses cached HTML).
+truncated.collapse();
 
-    // Redo the truncation (uses cached HTML).
-    truncated.collapse();
+// Update options.
+truncated.config({ lines : 3 });
 
-    // Update options.
-    truncated.config({ lines : 3 });
+// Check if content is truncated. (not supported as a jQuery plugin)
+var isTruncated = truncated.isTruncated;
 
-    // Check if content is truncated. (not supported as a jQuery plugin)
-    var isTruncated = truncated.isTruncated;
-
-    // Check if content is collapsed. (not supported as a jQuery plugin)
-    var isCollapsed = truncated.isCollapsed
+// Check if content is collapsed. (not supported as a jQuery plugin)
+var isCollapsed = truncated.isCollapsed
+```
 
 ## Options
 
@@ -123,5 +125,5 @@ To run the test suite:
 
 ## License
 
-Available under the MIT license. See LICENSE file for details.
+Available under the MIT license. See [LICENSE](LICENSE) file for details.
 
