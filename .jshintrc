@@ -3,6 +3,11 @@
     "jQuery": false,
     "$": false
   },
+  "predef": {
+    "define": false,
+    "module": false,
+    "require": false
+  },
   "node": false,
   "browser": true,
   "boss": true,

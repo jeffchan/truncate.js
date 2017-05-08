@@ -1,4 +1,12 @@
-(function (module, $, undefined) {
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jQuery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('jQuery'));
+    } else {
+        root.Truncate = factory(root.jQuery);
+    }
+}(this, function ($) {
 
   var BLOCK_TAGS = ['table', 'thead', 'tbody', 'tfoot', 'tr', 'col', 'colgroup', 'object', 'embed', 'param', 'ol', 'ul', 'dl', 'blockquote', 'select', 'optgroup', 'option', 'textarea', 'script', 'style'];
 
@@ -543,6 +551,6 @@
     });
   };
 
-  module.Truncate = Truncate;
+  return Truncate;
 
-})(this, jQuery);
+}));
