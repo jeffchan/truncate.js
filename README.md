@@ -119,7 +119,7 @@ To run the test suite:
 
 ## Libraries
 
-- [Mocha](http://visionmedia.github.com/mocha/) - Test runner, we use the `bdd` style.
+- [Mocha](http://mochajs.org/) - Test runner, we use the `bdd` style.
 - [Chai](http://chaijs.com/api/assert/) - Assertion library, we use `assert` style.
 - [Gulp](http://gulpjs.com/) - Builder
 
